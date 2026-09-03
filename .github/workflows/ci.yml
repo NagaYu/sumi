@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          # CPU-only torch keeps the runner image small
+          pip install torch --index-url https://download.pytorch.org/whl/cpu
+          pip install -e ".[dev]"
+
+      - name: Rule layer self-test
+        run: python -m sumi.rules
+
+      - name: Hard-negative generator self-test
+        run: python -m sumi.negatives
+
+      - name: Egress boundary self-test
+        run: python -m sumi.egress
+
+      - name: Reversible masking self-test
+        run: python -m sumi.mask
+
+      - name: Tests
+        # Model-dependent tests skip automatically when no checkpoint is present.
+        env:
+          SUMI_OFFLINE: "1"
+        run: python -m pytest -q -p no:warnings

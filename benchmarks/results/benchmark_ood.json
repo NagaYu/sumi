@@ -1,0 +1,2915 @@
+{
+  "n_pos": 100,
+  "n_neg": 100,
+  "pos_file": "ood.jsonl",
+  "tag": "ood",
+  "target_fpr": 0.05,
+  "match_mode": "partial",
+  "threshold": 0.5,
+  "results": [
+    {
+      "condition": "presidio_default",
+      "label": "(A) Presidio 既定",
+      "info": {
+        "name": "presidio_default",
+        "label": "(A) Presidio 既定",
+        "params": 13000000.0,
+        "runtime": "spaCy (en_core_web_sm) + regex",
+        "quantization": "none",
+        "notes": "英語既定構成をそのまま日本語入力に適用"
+      },
+      "speed": {
+        "docs_per_sec": 253.9263,
+        "ms_per_doc": 3.94,
+        "chars_per_sec": 63493.0,
+        "seconds": 0.788,
+        "load_seconds": 0.873,
+        "peak_rss_mb": 1231.2,
+        "threads": 8
+      },
+      "detection": {
+        "by_type": {
+          "NAME": {
+            "precision": 0.10526315789473684,
+            "recall": 0.05405405405405406,
+            "f1": 0.07142857142857144,
+            "tp": 2,
+            "fp": 17,
+            "fn": 35,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 4,
+            "fn": 39,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "precision": 0.6,
+            "recall": 0.9166666666666666,
+            "f1": 0.7252747252747253,
+            "tp": 33,
+            "fp": 22,
+            "fn": 3,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "precision": 1.0,
+            "recall": 0.19230769230769232,
+            "f1": 0.32258064516129037,
+            "tp": 5,
+            "fp": 0,
+            "fn": 21,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "precision": 0.08333333333333333,
+            "recall": 0.05263157894736842,
+            "f1": 0.06451612903225808,
+            "tp": 2,
+            "fp": 22,
+            "fn": 36,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 3,
+            "fn": 41,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 40,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "micro": {
+          "precision": 0.38181818181818183,
+          "recall": 0.11475409836065574,
+          "f1": 0.1764705882352941,
+          "tp": 42,
+          "fp": 68,
+          "fn": 324,
+          "support": 366
+        },
+        "macro": {
+          "precision": 0.178859649122807,
+          "recall": 0.12156599919757813,
+          "f1": 0.1183800070896845,
+          "n_types": 10
+        },
+        "n_docs": 100,
+        "mode": "partial"
+      },
+      "false_positives": {
+        "n_docs": 100,
+        "n_chars": 13690,
+        "n_fp": 45,
+        "n_docs_with_fp": 37,
+        "by_type": {
+          "PHONE": 9,
+          "DOB": 24,
+          "ADDRESS": 6,
+          "NAME": 6
+        },
+        "by_negative_kind": {
+          "phone_like_id": 54,
+          "address_like_facility": 19,
+          "place_as_person": 21,
+          "company_as_person": 17,
+          "honorific_boundary": 16,
+          "date_like_nondob": 23,
+          "common_noun_surname": 21,
+          "number_like_id": 21
+        },
+        "fp_per_doc": 0.45,
+        "fp_per_1000_chars": 3.287070854638422,
+        "doc_level_fp_rate": 0.37,
+        "definitions": {
+          "fp_per_doc": "誤検出スパン数 / 否定例文書数",
+          "fp_per_1000_chars": "誤検出スパン数 / (総文字数 / 1000)",
+          "doc_level_fp_rate": "誤検出が1件以上出た否定例文書の割合 (= README の誤検出率)"
+        }
+      },
+      "fp_by_kind": {
+        "phone_like_id": 30,
+        "date_like_nondob": 5,
+        "address_like_facility": 3,
+        "honorific_boundary": 2,
+        "company_as_person": 2,
+        "place_as_person": 2,
+        "other": 1
+      },
+      "recall_at_fixed_fpr": {
+        "threshold": 1.0,
+        "fpr": 0.0,
+        "overall_recall": 0.01366120218579235,
+        "by_type": {
+          "NAME": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 37,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 39,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 36,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "recall": 0.19230769230769232,
+            "precision": 1.0,
+            "f1": 0.32258064516129037,
+            "tp": 5,
+            "fp": 0,
+            "fn": 21,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 38,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 40,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "target_fpr": 0.05,
+        "fpr_metric": "per_doc",
+        "achieved": true,
+        "degenerate": null,
+        "mode": "partial",
+        "overall_precision": 1.0,
+        "overall_f1": 0.026954177897574125,
+        "macro_recall": 0.019230769230769232,
+        "n_gold_spans": 366,
+        "n_pos_docs": 100,
+        "n_neg_docs": 100,
+        "n_kept_pos_spans": 5,
+        "fp_report": {
+          "fp_per_doc": 0.0,
+          "fp_per_1000_chars": 0.0,
+          "doc_level_fp_rate": 0.0,
+          "n_fp": 0,
+          "n_docs": 100,
+          "n_docs_with_fp": 0
+        }
+      },
+      "curve": [
+        [
+          0.05,
+          0.45,
+          0.11475409836065574
+        ],
+        [
+          0.4,
+          0.45,
+          0.11475409836065574
+        ],
+        [
+          0.6,
+          0.36,
+          0.02459016393442623
+        ],
+        [
+          0.85,
+          0.36,
+          0.02459016393442623
+        ],
+        [
+          1.0,
+          0.0,
+          0.01366120218579235
+        ],
+        [
+          1.000001,
+          0.0,
+          0.0
+        ]
+      ],
+      "calibration": {
+        "ece": 0.47483870967741926,
+        "n": 155,
+        "mean_score": 0.6503225806451612,
+        "positive_rate": 0.2709677419354839
+      }
+    },
+    {
+      "condition": "presidio_ginza",
+      "label": "(B) Presidio + GiNZA",
+      "info": {
+        "name": "presidio_ginza",
+        "label": "(B) Presidio + GiNZA",
+        "params": 50000000.0,
+        "runtime": "spaCy/GiNZA + presidio regex",
+        "quantization": "none",
+        "notes": "GiNZA 拡張固有表現を Presidio エンティティへ写像し住所断片を連結"
+      },
+      "speed": {
+        "docs_per_sec": 6.0478,
+        "ms_per_doc": 165.35,
+        "chars_per_sec": 1512.2,
+        "seconds": 33.07,
+        "load_seconds": 0.942,
+        "peak_rss_mb": 1414.1,
+        "threads": 8
+      },
+      "detection": {
+        "by_type": {
+          "NAME": {
+            "precision": 0.18354430379746836,
+            "recall": 0.7837837837837838,
+            "f1": 0.29743589743589743,
+            "tp": 29,
+            "fp": 129,
+            "fn": 8,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "precision": 0.03296703296703297,
+            "recall": 0.07692307692307693,
+            "f1": 0.046153846153846156,
+            "tp": 3,
+            "fp": 88,
+            "fn": 36,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "precision": 0.5172413793103449,
+            "recall": 0.8333333333333334,
+            "f1": 0.6382978723404256,
+            "tp": 30,
+            "fp": 28,
+            "fn": 6,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "precision": 1.0,
+            "recall": 0.23076923076923078,
+            "f1": 0.375,
+            "tp": 6,
+            "fp": 0,
+            "fn": 20,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "precision": 0.24390243902439024,
+            "recall": 0.7894736842105263,
+            "f1": 0.37267080745341613,
+            "tp": 30,
+            "fp": 93,
+            "fn": 8,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 40,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "precision": 0.16666666666666666,
+            "recall": 0.024390243902439025,
+            "f1": 0.0425531914893617,
+            "tp": 1,
+            "fp": 5,
+            "fn": 40,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "precision": 0.0,
+            "recall": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "micro": {
+          "precision": 0.2239819004524887,
+          "recall": 0.27049180327868855,
+          "f1": 0.24504950495049505,
+          "tp": 99,
+          "fp": 343,
+          "fn": 267,
+          "support": 366
+        },
+        "macro": {
+          "precision": 0.2144321821765903,
+          "recall": 0.27386733529223906,
+          "f1": 0.1772111614872947,
+          "n_types": 10
+        },
+        "n_docs": 100,
+        "mode": "partial"
+      },
+      "false_positives": {
+        "n_docs": 100,
+        "n_chars": 13690,
+        "n_fp": 202,
+        "n_docs_with_fp": 83,
+        "by_type": {
+          "DOB": 62,
+          "NAME": 45,
+          "PHONE": 15,
+          "ADDRESS": 77,
+          "MEMBER_ID": 3
+        },
+        "by_negative_kind": {
+          "number_like_id": 78,
+          "date_like_nondob": 135,
+          "phone_like_id": 139,
+          "company_as_person": 73,
+          "address_like_facility": 116,
+          "common_noun_surname": 96,
+          "place_as_person": 135,
+          "honorific_boundary": 78
+        },
+        "fp_per_doc": 2.02,
+        "fp_per_1000_chars": 14.755295836376918,
+        "doc_level_fp_rate": 0.83,
+        "definitions": {
+          "fp_per_doc": "誤検出スパン数 / 否定例文書数",
+          "fp_per_1000_chars": "誤検出スパン数 / (総文字数 / 1000)",
+          "doc_level_fp_rate": "誤検出が1件以上出た否定例文書の割合 (= README の誤検出率)"
+        }
+      },
+      "fp_by_kind": {
+        "date_like_nondob": 51,
+        "other": 36,
+        "phone_like_id": 30,
+        "place_as_person": 23,
+        "address_like_facility": 22,
+        "number_like_id": 16,
+        "company_as_person": 11,
+        "honorific_boundary": 11,
+        "common_noun_surname": 2
+      },
+      "recall_at_fixed_fpr": {
+        "threshold": 1.0,
+        "fpr": 0.0,
+        "overall_recall": 0.01366120218579235,
+        "by_type": {
+          "NAME": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 37,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 39,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 36,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "recall": 0.19230769230769232,
+            "precision": 1.0,
+            "f1": 0.32258064516129037,
+            "tp": 5,
+            "fp": 0,
+            "fn": 21,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 38,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 40,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "target_fpr": 0.05,
+        "fpr_metric": "per_doc",
+        "achieved": true,
+        "degenerate": null,
+        "mode": "partial",
+        "overall_precision": 1.0,
+        "overall_f1": 0.026954177897574125,
+        "macro_recall": 0.019230769230769232,
+        "n_gold_spans": 366,
+        "n_pos_docs": 100,
+        "n_neg_docs": 100,
+        "n_kept_pos_spans": 5,
+        "fp_report": {
+          "fp_per_doc": 0.0,
+          "fp_per_1000_chars": 0.0,
+          "doc_level_fp_rate": 0.0,
+          "n_fp": 0,
+          "n_docs": 100,
+          "n_docs_with_fp": 0
+        }
+      },
+      "curve": [
+        [
+          0.4,
+          2.02,
+          0.27049180327868855
+        ],
+        [
+          0.6,
+          1.92,
+          0.1912568306010929
+        ],
+        [
+          0.85,
+          1.85,
+          0.1912568306010929
+        ],
+        [
+          1.0,
+          0.0,
+          0.01366120218579235
+        ],
+        [
+          1.000001,
+          0.0,
+          0.0
+        ]
+      ],
+      "calibration": {
+        "ece": 0.675310559006211,
+        "n": 644,
+        "mean_score": 0.8085403726708074,
+        "positive_rate": 0.15372670807453417
+      }
+    },
+    {
+      "condition": "local_llm_4b",
+      "label": "(C) ローカルLLM 4B (Q4)",
+      "info": {
+        "name": "local_llm_4b",
+        "label": "(C) ローカルLLM 4B (Q4)",
+        "params": 4000000000.0,
+        "runtime": "llama.cpp (CPU, n_gpu_layers=0)",
+        "quantization": "Q4_K_M",
+        "notes": "Qwen3-4B-Instruct-2507 をプロンプトで PII 抽出に用いる"
+      },
+      "speed": {
+        "docs_per_sec": 0.1391,
+        "ms_per_doc": 7187.01,
+        "chars_per_sec": 34.8,
+        "seconds": 1437.403,
+        "load_seconds": 1.98,
+        "peak_rss_mb": 5973.6,
+        "threads": 8
+      },
+      "detection": {
+        "by_type": {
+          "NAME": {
+            "precision": 0.5405405405405406,
+            "recall": 0.5405405405405406,
+            "f1": 0.5405405405405406,
+            "tp": 20,
+            "fp": 17,
+            "fn": 17,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "precision": 0.9459459459459459,
+            "recall": 0.8974358974358975,
+            "f1": 0.9210526315789475,
+            "tp": 35,
+            "fp": 2,
+            "fn": 4,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "precision": 1.0,
+            "recall": 0.9166666666666666,
+            "f1": 0.9565217391304348,
+            "tp": 33,
+            "fp": 0,
+            "fn": 3,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "precision": 0.9629629629629629,
+            "recall": 1.0,
+            "f1": 0.9811320754716981,
+            "tp": 26,
+            "fp": 1,
+            "fn": 0,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "precision": 0.72,
+            "recall": 0.9473684210526315,
+            "f1": 0.8181818181818181,
+            "tp": 36,
+            "fp": 14,
+            "fn": 2,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "precision": 1.0,
+            "recall": 0.6829268292682927,
+            "f1": 0.8115942028985507,
+            "tp": 28,
+            "fp": 0,
+            "fn": 13,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "precision": 1.0,
+            "recall": 0.6,
+            "f1": 0.7499999999999999,
+            "tp": 24,
+            "fp": 0,
+            "fn": 16,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "precision": 1.0,
+            "recall": 0.6764705882352942,
+            "f1": 0.8070175438596492,
+            "tp": 23,
+            "fp": 0,
+            "fn": 11,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "precision": 0.9310344827586207,
+            "recall": 0.6585365853658537,
+            "f1": 0.7714285714285715,
+            "tp": 27,
+            "fp": 2,
+            "fn": 14,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "precision": 0.8787878787878788,
+            "recall": 0.8529411764705882,
+            "f1": 0.8656716417910447,
+            "tp": 29,
+            "fp": 4,
+            "fn": 5,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "micro": {
+          "precision": 0.8753894080996885,
+          "recall": 0.76775956284153,
+          "f1": 0.8180494905385733,
+          "tp": 281,
+          "fp": 40,
+          "fn": 85,
+          "support": 366
+        },
+        "macro": {
+          "precision": 0.8979271810995948,
+          "recall": 0.7772886705035764,
+          "f1": 0.8223140764881254,
+          "n_types": 10
+        },
+        "n_docs": 100,
+        "mode": "partial"
+      },
+      "false_positives": {
+        "n_docs": 100,
+        "n_chars": 13690,
+        "n_fp": 14,
+        "n_docs_with_fp": 8,
+        "by_type": {
+          "DOB": 6,
+          "PHONE": 2,
+          "MEMBER_ID": 1,
+          "NAME": 4,
+          "POSTAL_CODE": 1
+        },
+        "by_negative_kind": {
+          "date_like_nondob": 10,
+          "honorific_boundary": 2,
+          "phone_like_id": 17,
+          "number_like_id": 5,
+          "place_as_person": 2,
+          "address_like_facility": 12,
+          "company_as_person": 2,
+          "common_noun_surname": 6
+        },
+        "fp_per_doc": 0.14,
+        "fp_per_1000_chars": 1.0226442658875092,
+        "doc_level_fp_rate": 0.08,
+        "definitions": {
+          "fp_per_doc": "誤検出スパン数 / 否定例文書数",
+          "fp_per_1000_chars": "誤検出スパン数 / (総文字数 / 1000)",
+          "doc_level_fp_rate": "誤検出が1件以上出た否定例文書の割合 (= README の誤検出率)"
+        }
+      },
+      "fp_by_kind": {
+        "phone_like_id": 6,
+        "date_like_nondob": 3,
+        "other": 3,
+        "address_like_facility": 1,
+        "place_as_person": 1
+      },
+      "recall_at_fixed_fpr": {
+        "threshold": 0.900001,
+        "fpr": 0.0,
+        "overall_recall": 0.0,
+        "by_type": {
+          "NAME": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 37,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 39,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 36,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 26,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 38,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 40,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 41,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "recall": 0.0,
+            "precision": 0.0,
+            "f1": 0.0,
+            "tp": 0,
+            "fp": 0,
+            "fn": 34,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "target_fpr": 0.05,
+        "fpr_metric": "per_doc",
+        "achieved": true,
+        "degenerate": "only_empty_predictions_meet_target",
+        "mode": "partial",
+        "overall_precision": 0.0,
+        "overall_f1": 0.0,
+        "macro_recall": 0.0,
+        "n_gold_spans": 366,
+        "n_pos_docs": 100,
+        "n_neg_docs": 100,
+        "n_kept_pos_spans": 0,
+        "fp_report": {
+          "fp_per_doc": 0.0,
+          "fp_per_1000_chars": 0.0,
+          "doc_level_fp_rate": 0.0,
+          "n_fp": 0,
+          "n_docs": 100,
+          "n_docs_with_fp": 0
+        }
+      },
+      "curve": [
+        [
+          0.9,
+          0.14,
+          0.76775956284153
+        ],
+        [
+          0.900001,
+          0.0,
+          0.0
+        ]
+      ],
+      "calibration": null
+    },
+    {
+      "condition": "sumi_fp32",
+      "label": "(D) Sumi 量子化前 (fp32)",
+      "info": {
+        "name": "sumi_fp32",
+        "label": "(D) Sumi 量子化前 (fp32)",
+        "params": 132400000.0,
+        "runtime": "PyTorch (CPU)",
+        "quantization": "none",
+        "notes": "ModernBERT-Ja-130m + 規則層 + 較正"
+      },
+      "speed": {
+        "docs_per_sec": 12.0524,
+        "ms_per_doc": 82.97,
+        "chars_per_sec": 3013.6,
+        "seconds": 16.594,
+        "load_seconds": 2.967,
+        "peak_rss_mb": 1192.2,
+        "threads": 8
+      },
+      "detection": {
+        "by_type": {
+          "NAME": {
+            "precision": 0.8571428571428571,
+            "recall": 0.8108108108108109,
+            "f1": 0.8333333333333334,
+            "tp": 30,
+            "fp": 5,
+            "fn": 7,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 39,
+            "fp": 0,
+            "fn": 0,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 36,
+            "fp": 0,
+            "fn": 0,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 26,
+            "fp": 0,
+            "fn": 0,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "precision": 0.9047619047619048,
+            "recall": 1.0,
+            "f1": 0.9500000000000001,
+            "tp": 38,
+            "fp": 4,
+            "fn": 0,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 41,
+            "fp": 0,
+            "fn": 0,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 40,
+            "fp": 0,
+            "fn": 0,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 41,
+            "fp": 0,
+            "fn": 0,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "micro": {
+          "precision": 0.9755434782608695,
+          "recall": 0.9808743169398907,
+          "f1": 0.9782016348773842,
+          "tp": 359,
+          "fp": 9,
+          "fn": 7,
+          "support": 366
+        },
+        "macro": {
+          "precision": 0.9761904761904763,
+          "recall": 0.981081081081081,
+          "f1": 0.9783333333333333,
+          "n_types": 10
+        },
+        "n_docs": 100,
+        "mode": "partial"
+      },
+      "false_positives": {
+        "n_docs": 100,
+        "n_chars": 13690,
+        "n_fp": 0,
+        "n_docs_with_fp": 0,
+        "by_type": {},
+        "by_negative_kind": {},
+        "fp_per_doc": 0.0,
+        "fp_per_1000_chars": 0.0,
+        "doc_level_fp_rate": 0.0,
+        "definitions": {
+          "fp_per_doc": "誤検出スパン数 / 否定例文書数",
+          "fp_per_1000_chars": "誤検出スパン数 / (総文字数 / 1000)",
+          "doc_level_fp_rate": "誤検出が1件以上出た否定例文書の割合 (= README の誤検出率)"
+        }
+      },
+      "fp_by_kind": {},
+      "recall_at_fixed_fpr": {
+        "threshold": 0.5038,
+        "fpr": 0.0,
+        "overall_recall": 0.9808743169398907,
+        "by_type": {
+          "NAME": {
+            "recall": 0.8108108108108109,
+            "precision": 0.8571428571428571,
+            "f1": 0.8333333333333334,
+            "tp": 30,
+            "fp": 5,
+            "fn": 7,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 39,
+            "fp": 0,
+            "fn": 0,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 36,
+            "fp": 0,
+            "fn": 0,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 26,
+            "fp": 0,
+            "fn": 0,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "recall": 1.0,
+            "precision": 0.9047619047619048,
+            "f1": 0.9500000000000001,
+            "tp": 38,
+            "fp": 4,
+            "fn": 0,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 41,
+            "fp": 0,
+            "fn": 0,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 40,
+            "fp": 0,
+            "fn": 0,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 41,
+            "fp": 0,
+            "fn": 0,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "target_fpr": 0.05,
+        "fpr_metric": "per_doc",
+        "achieved": true,
+        "degenerate": null,
+        "mode": "partial",
+        "overall_precision": 0.9755434782608695,
+        "overall_f1": 0.9782016348773842,
+        "macro_recall": 0.981081081081081,
+        "n_gold_spans": 366,
+        "n_pos_docs": 100,
+        "n_neg_docs": 100,
+        "n_kept_pos_spans": 368,
+        "fp_report": {
+          "fp_per_doc": 0.0,
+          "fp_per_1000_chars": 0.0,
+          "doc_level_fp_rate": 0.0,
+          "n_fp": 0,
+          "n_docs": 100,
+          "n_docs_with_fp": 0
+        }
+      },
+      "curve": [
+        [
+          0.5038,
+          0.0,
+          0.9808743169398907
+        ],
+        [
+          0.513111,
+          0.0,
+          0.9781420765027322
+        ],
+        [
+          0.522145,
+          0.0,
+          0.9754098360655737
+        ],
+        [
+          0.53964,
+          0.0,
+          0.9726775956284153
+        ],
+        [
+          0.543127,
+          0.0,
+          0.9699453551912568
+        ],
+        [
+          0.552066,
+          0.0,
+          0.9672131147540983
+        ],
+        [
+          0.574392,
+          0.0,
+          0.9672131147540983
+        ],
+        [
+          0.579124,
+          0.0,
+          0.9672131147540983
+        ],
+        [
+          0.626218,
+          0.0,
+          0.9672131147540983
+        ],
+        [
+          0.638808,
+          0.0,
+          0.9644808743169399
+        ],
+        [
+          0.678776,
+          0.0,
+          0.9617486338797814
+        ],
+        [
+          0.680288,
+          0.0,
+          0.9617486338797814
+        ],
+        [
+          0.681875,
+          0.0,
+          0.9590163934426229
+        ],
+        [
+          0.689196,
+          0.0,
+          0.9562841530054644
+        ],
+        [
+          0.7,
+          0.0,
+          0.953551912568306
+        ],
+        [
+          0.714391,
+          0.0,
+          0.8743169398907104
+        ],
+        [
+          0.715624,
+          0.0,
+          0.8715846994535519
+        ],
+        [
+          0.746209,
+          0.0,
+          0.8688524590163934
+        ],
+        [
+          0.75,
+          0.0,
+          0.8688524590163934
+        ],
+        [
+          0.758212,
+          0.0,
+          0.76775956284153
+        ],
+        [
+          0.758584,
+          0.0,
+          0.76775956284153
+        ],
+        [
+          0.76893,
+          0.0,
+          0.76775956284153
+        ],
+        [
+          0.794109,
+          0.0,
+          0.7650273224043715
+        ],
+        [
+          0.810234,
+          0.0,
+          0.7622950819672131
+        ],
+        [
+          0.842028,
+          0.0,
+          0.7595628415300546
+        ],
+        [
+          0.85,
+          0.0,
+          0.7568306010928961
+        ],
+        [
+          0.856857,
+          0.0,
+          0.6639344262295082
+        ],
+        [
+          0.865875,
+          0.0,
+          0.6612021857923497
+        ],
+        [
+          0.881175,
+          0.0,
+          0.6584699453551912
+        ],
+        [
+          0.8889,
+          0.0,
+          0.6557377049180327
+        ],
+        [
+          0.904879,
+          0.0,
+          0.6530054644808743
+        ],
+        [
+          0.913574,
+          0.0,
+          0.6530054644808743
+        ],
+        [
+          0.917056,
+          0.0,
+          0.6502732240437158
+        ],
+        [
+          0.92,
+          0.0,
+          0.6475409836065574
+        ],
+        [
+          0.924192,
+          0.0,
+          0.5846994535519126
+        ],
+        [
+          0.929682,
+          0.0,
+          0.5819672131147541
+        ],
+        [
+          0.929759,
+          0.0,
+          0.5792349726775956
+        ],
+        [
+          0.93,
+          0.0,
+          0.5765027322404371
+        ],
+        [
+          0.934258,
+          0.0,
+          0.4672131147540984
+        ],
+        [
+          0.9382,
+          0.0,
+          0.4644808743169399
+        ],
+        [
+          0.939638,
+          0.0,
+          0.46174863387978143
+        ],
+        [
+          0.947512,
+          0.0,
+          0.45901639344262296
+        ],
+        [
+          0.95,
+          0.0,
+          0.4562841530054645
+        ],
+        [
+          0.95246,
+          0.0,
+          0.35792349726775957
+        ],
+        [
+          0.952616,
+          0.0,
+          0.3551912568306011
+        ],
+        [
+          0.952985,
+          0.0,
+          0.3524590163934426
+        ],
+        [
+          0.954334,
+          0.0,
+          0.34972677595628415
+        ],
+        [
+          0.961497,
+          0.0,
+          0.3469945355191257
+        ],
+        [
+          0.964906,
+          0.0,
+          0.3442622950819672
+        ],
+        [
+          0.967594,
+          0.0,
+          0.34153005464480873
+        ],
+        [
+          0.972375,
+          0.0,
+          0.33879781420765026
+        ],
+        [
+          0.974158,
+          0.0,
+          0.3360655737704918
+        ],
+        [
+          0.976237,
+          0.0,
+          0.3333333333333333
+        ],
+        [
+          0.977527,
+          0.0,
+          0.33060109289617484
+        ],
+        [
+          0.97801,
+          0.0,
+          0.32786885245901637
+        ],
+        [
+          0.979558,
+          0.0,
+          0.3251366120218579
+        ],
+        [
+          0.980583,
+          0.0,
+          0.3224043715846995
+        ],
+        [
+          0.982743,
+          0.0,
+          0.319672131147541
+        ],
+        [
+          0.986615,
+          0.0,
+          0.31693989071038253
+        ],
+        [
+          0.986707,
+          0.0,
+          0.31420765027322406
+        ],
+        [
+          0.987127,
+          0.0,
+          0.3114754098360656
+        ],
+        [
+          0.987233,
+          0.0,
+          0.3087431693989071
+        ],
+        [
+          0.988093,
+          0.0,
+          0.30601092896174864
+        ],
+        [
+          0.989403,
+          0.0,
+          0.30327868852459017
+        ],
+        [
+          0.989637,
+          0.0,
+          0.3005464480874317
+        ],
+        [
+          0.989658,
+          0.0,
+          0.2978142076502732
+        ],
+        [
+          0.99,
+          0.0,
+          0.29508196721311475
+        ],
+        [
+          0.99003,
+          0.0,
+          0.18032786885245902
+        ],
+        [
+          0.990725,
+          0.0,
+          0.17759562841530055
+        ],
+        [
+          0.991314,
+          0.0,
+          0.17486338797814208
+        ],
+        [
+          0.992168,
+          0.0,
+          0.1721311475409836
+        ],
+        [
+          0.992212,
+          0.0,
+          0.16939890710382513
+        ],
+        [
+          0.993126,
+          0.0,
+          0.16666666666666666
+        ],
+        [
+          0.993171,
+          0.0,
+          0.16393442622950818
+        ],
+        [
+          0.993327,
+          0.0,
+          0.16120218579234974
+        ],
+        [
+          0.993778,
+          0.0,
+          0.15846994535519127
+        ],
+        [
+          0.994049,
+          0.0,
+          0.1557377049180328
+        ],
+        [
+          0.994215,
+          0.0,
+          0.15300546448087432
+        ],
+        [
+          0.994243,
+          0.0,
+          0.15027322404371585
+        ],
+        [
+          0.994467,
+          0.0,
+          0.14754098360655737
+        ],
+        [
+          0.99473,
+          0.0,
+          0.1448087431693989
+        ],
+        [
+          0.994809,
+          0.0,
+          0.14207650273224043
+        ],
+        [
+          0.995381,
+          0.0,
+          0.13934426229508196
+        ],
+        [
+          0.995793,
+          0.0,
+          0.1366120218579235
+        ],
+        [
+          0.996291,
+          0.0,
+          0.13387978142076504
+        ],
+        [
+          0.99633,
+          0.0,
+          0.13114754098360656
+        ],
+        [
+          0.996609,
+          0.0,
+          0.1284153005464481
+        ],
+        [
+          0.996781,
+          0.0,
+          0.12568306010928962
+        ],
+        [
+          0.996814,
+          0.0,
+          0.12295081967213115
+        ],
+        [
+          0.996976,
+          0.0,
+          0.12021857923497267
+        ],
+        [
+          0.997155,
+          0.0,
+          0.11748633879781421
+        ],
+        [
+          0.997218,
+          0.0,
+          0.11475409836065574
+        ],
+        [
+          0.997729,
+          0.0,
+          0.11202185792349727
+        ],
+        [
+          0.997904,
+          0.0,
+          0.1092896174863388
+        ],
+        [
+          0.998012,
+          0.0,
+          0.1092896174863388
+        ],
+        [
+          0.998154,
+          0.0,
+          0.10655737704918032
+        ],
+        [
+          0.99816,
+          0.0,
+          0.10382513661202186
+        ],
+        [
+          0.99842,
+          0.0,
+          0.10109289617486339
+        ],
+        [
+          0.99847,
+          0.0,
+          0.09836065573770492
+        ],
+        [
+          0.998649,
+          0.0,
+          0.09562841530054644
+        ],
+        [
+          0.998651,
+          0.0,
+          0.09289617486338798
+        ],
+        [
+          0.998653,
+          0.0,
+          0.09016393442622951
+        ],
+        [
+          0.998761,
+          0.0,
+          0.08743169398907104
+        ],
+        [
+          0.998834,
+          0.0,
+          0.08469945355191257
+        ],
+        [
+          0.99889,
+          0.0,
+          0.08196721311475409
+        ],
+        [
+          0.998953,
+          0.0,
+          0.07923497267759563
+        ],
+        [
+          0.999057,
+          0.0,
+          0.07650273224043716
+        ],
+        [
+          0.999283,
+          0.0,
+          0.07377049180327869
+        ],
+        [
+          0.999304,
+          0.0,
+          0.07103825136612021
+        ],
+        [
+          0.999435,
+          0.0,
+          0.06830601092896176
+        ],
+        [
+          0.999488,
+          0.0,
+          0.06557377049180328
+        ],
+        [
+          0.999673,
+          0.0,
+          0.06284153005464481
+        ],
+        [
+          0.999718,
+          0.0,
+          0.060109289617486336
+        ],
+        [
+          0.999723,
+          0.0,
+          0.05737704918032787
+        ],
+        [
+          0.999775,
+          0.0,
+          0.0546448087431694
+        ],
+        [
+          0.99979,
+          0.0,
+          0.05191256830601093
+        ],
+        [
+          0.999802,
+          0.0,
+          0.04918032786885246
+        ],
+        [
+          0.99982,
+          0.0,
+          0.04644808743169399
+        ],
+        [
+          0.999868,
+          0.0,
+          0.04371584699453552
+        ],
+        [
+          0.999877,
+          0.0,
+          0.040983606557377046
+        ],
+        [
+          0.999882,
+          0.0,
+          0.03825136612021858
+        ],
+        [
+          0.9998830000000001,
+          0.0,
+          0.0
+        ]
+      ],
+      "calibration": {
+        "ece": 0.08755240489130434,
+        "n": 368,
+        "mean_score": 0.8922755788043478,
+        "positive_rate": 0.9755434782608695
+      }
+    },
+    {
+      "condition": "sumi_int8",
+      "label": "(E) Sumi 量子化後 (ONNX INT8)",
+      "info": {
+        "name": "sumi_int8",
+        "label": "(E) Sumi 量子化後 (ONNX INT8)",
+        "params": 132400000.0,
+        "runtime": "onnxruntime (CPU)",
+        "quantization": "INT8 (dynamic)",
+        "notes": "ModernBERT-Ja-130m + 規則層 + 較正"
+      },
+      "speed": {
+        "docs_per_sec": 22.544,
+        "ms_per_doc": 44.36,
+        "chars_per_sec": 5637.0,
+        "seconds": 8.872,
+        "load_seconds": 2.995,
+        "peak_rss_mb": 999.6,
+        "threads": 8
+      },
+      "detection": {
+        "by_type": {
+          "NAME": {
+            "precision": 0.8333333333333334,
+            "recall": 0.8108108108108109,
+            "f1": 0.8219178082191781,
+            "tp": 30,
+            "fp": 6,
+            "fn": 7,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "precision": 0.972972972972973,
+            "recall": 0.9230769230769231,
+            "f1": 0.9473684210526315,
+            "tp": 36,
+            "fp": 1,
+            "fn": 3,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 36,
+            "fp": 0,
+            "fn": 0,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 26,
+            "fp": 0,
+            "fn": 0,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "precision": 0.918918918918919,
+            "recall": 0.8947368421052632,
+            "f1": 0.9066666666666667,
+            "tp": 34,
+            "fp": 3,
+            "fn": 4,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 41,
+            "fp": 0,
+            "fn": 0,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "precision": 0.8888888888888888,
+            "recall": 1.0,
+            "f1": 0.9411764705882353,
+            "tp": 40,
+            "fp": 5,
+            "fn": 0,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "precision": 0.8723404255319149,
+            "recall": 1.0,
+            "f1": 0.9318181818181819,
+            "tp": 41,
+            "fp": 6,
+            "fn": 0,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "precision": 1.0,
+            "recall": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "micro": {
+          "precision": 0.9436997319034852,
+          "recall": 0.9617486338797814,
+          "f1": 0.952638700947226,
+          "tp": 352,
+          "fp": 21,
+          "fn": 14,
+          "support": 366
+        },
+        "macro": {
+          "precision": 0.948645453964603,
+          "recall": 0.9628624575992998,
+          "f1": 0.9548947548344893,
+          "n_types": 10
+        },
+        "n_docs": 100,
+        "mode": "partial"
+      },
+      "false_positives": {
+        "n_docs": 100,
+        "n_chars": 13690,
+        "n_fp": 6,
+        "n_docs_with_fp": 6,
+        "by_type": {
+          "MEMBER_ID": 2,
+          "NAME": 2,
+          "CREDIT_CARD": 2
+        },
+        "by_negative_kind": {
+          "company_as_person": 3,
+          "honorific_boundary": 4,
+          "number_like_id": 2,
+          "phone_like_id": 2,
+          "place_as_person": 3,
+          "address_like_facility": 6,
+          "common_noun_surname": 2,
+          "date_like_nondob": 1
+        },
+        "fp_per_doc": 0.06,
+        "fp_per_1000_chars": 0.43827611395178967,
+        "doc_level_fp_rate": 0.06,
+        "definitions": {
+          "fp_per_doc": "誤検出スパン数 / 否定例文書数",
+          "fp_per_1000_chars": "誤検出スパン数 / (総文字数 / 1000)",
+          "doc_level_fp_rate": "誤検出が1件以上出た否定例文書の割合 (= README の誤検出率)"
+        }
+      },
+      "fp_by_kind": {
+        "other": 5,
+        "honorific_boundary": 1
+      },
+      "recall_at_fixed_fpr": {
+        "threshold": 0.50962,
+        "fpr": 0.05,
+        "overall_recall": 0.9617486338797814,
+        "by_type": {
+          "NAME": {
+            "recall": 0.8108108108108109,
+            "precision": 0.8333333333333334,
+            "f1": 0.8219178082191781,
+            "tp": 30,
+            "fp": 6,
+            "fn": 7,
+            "support": 37,
+            "ja": "氏名"
+          },
+          "ADDRESS": {
+            "recall": 0.9230769230769231,
+            "precision": 0.972972972972973,
+            "f1": 0.9473684210526315,
+            "tp": 36,
+            "fp": 1,
+            "fn": 3,
+            "support": 39,
+            "ja": "住所"
+          },
+          "PHONE": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 36,
+            "fp": 0,
+            "fn": 0,
+            "support": 36,
+            "ja": "電話番号"
+          },
+          "EMAIL": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 26,
+            "fp": 0,
+            "fn": 0,
+            "support": 26,
+            "ja": "メールアドレス"
+          },
+          "DOB": {
+            "recall": 0.8947368421052632,
+            "precision": 0.918918918918919,
+            "f1": 0.9066666666666667,
+            "tp": 34,
+            "fp": 3,
+            "fn": 4,
+            "support": 38,
+            "ja": "生年月日"
+          },
+          "BANK_ACCOUNT": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 41,
+            "fp": 0,
+            "fn": 0,
+            "support": 41,
+            "ja": "金融口座"
+          },
+          "CREDIT_CARD": {
+            "recall": 1.0,
+            "precision": 0.8888888888888888,
+            "f1": 0.9411764705882353,
+            "tp": 40,
+            "fp": 5,
+            "fn": 0,
+            "support": 40,
+            "ja": "カード番号"
+          },
+          "MYNUMBER": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "マイナンバー様式"
+          },
+          "MEMBER_ID": {
+            "recall": 1.0,
+            "precision": 0.8723404255319149,
+            "f1": 0.9318181818181819,
+            "tp": 41,
+            "fp": 6,
+            "fn": 0,
+            "support": 41,
+            "ja": "会員番号"
+          },
+          "POSTAL_CODE": {
+            "recall": 1.0,
+            "precision": 1.0,
+            "f1": 1.0,
+            "tp": 34,
+            "fp": 0,
+            "fn": 0,
+            "support": 34,
+            "ja": "郵便番号"
+          }
+        },
+        "target_fpr": 0.05,
+        "fpr_metric": "per_doc",
+        "achieved": true,
+        "degenerate": null,
+        "mode": "partial",
+        "overall_precision": 0.9436997319034852,
+        "overall_f1": 0.952638700947226,
+        "macro_recall": 0.9628624575992998,
+        "n_gold_spans": 366,
+        "n_pos_docs": 100,
+        "n_neg_docs": 100,
+        "n_kept_pos_spans": 373,
+        "fp_report": {
+          "fp_per_doc": 0.05,
+          "fp_per_1000_chars": 0.3652300949598247,
+          "doc_level_fp_rate": 0.05,
+          "n_fp": 5,
+          "n_docs": 100,
+          "n_docs_with_fp": 5
+        }
+      },
+      "curve": [
+        [
+          0.505865,
+          0.06,
+          0.9617486338797814
+        ],
+        [
+          0.50962,
+          0.05,
+          0.9617486338797814
+        ],
+        [
+          0.516128,
+          0.05,
+          0.9617486338797814
+        ],
+        [
+          0.516151,
+          0.05,
+          0.9590163934426229
+        ],
+        [
+          0.518187,
+          0.05,
+          0.9562841530054644
+        ],
+        [
+          0.527855,
+          0.05,
+          0.953551912568306
+        ],
+        [
+          0.544922,
+          0.04,
+          0.953551912568306
+        ],
+        [
+          0.564471,
+          0.04,
+          0.9508196721311475
+        ],
+        [
+          0.566206,
+          0.04,
+          0.9508196721311475
+        ],
+        [
+          0.5681,
+          0.03,
+          0.9508196721311475
+        ],
+        [
+          0.569158,
+          0.03,
+          0.9508196721311475
+        ],
+        [
+          0.575774,
+          0.03,
+          0.9508196721311475
+        ],
+        [
+          0.580617,
+          0.03,
+          0.9480874316939891
+        ],
+        [
+          0.590423,
+          0.03,
+          0.9480874316939891
+        ],
+        [
+          0.591487,
+          0.03,
+          0.9480874316939891
+        ],
+        [
+          0.593598,
+          0.03,
+          0.9480874316939891
+        ],
+        [
+          0.595162,
+          0.03,
+          0.9453551912568307
+        ],
+        [
+          0.599371,
+          0.02,
+          0.9453551912568307
+        ],
+        [
+          0.608732,
+          0.02,
+          0.9426229508196722
+        ],
+        [
+          0.609716,
+          0.02,
+          0.9398907103825137
+        ],
+        [
+          0.617607,
+          0.02,
+          0.9398907103825137
+        ],
+        [
+          0.626059,
+          0.02,
+          0.9371584699453552
+        ],
+        [
+          0.634814,
+          0.02,
+          0.9344262295081968
+        ],
+        [
+          0.637925,
+          0.02,
+          0.9316939890710383
+        ],
+        [
+          0.668609,
+          0.02,
+          0.9289617486338798
+        ],
+        [
+          0.7,
+          0.02,
+          0.9289617486338798
+        ],
+        [
+          0.703013,
+          0.02,
+          0.8497267759562842
+        ],
+        [
+          0.710775,
+          0.02,
+          0.8469945355191257
+        ],
+        [
+          0.713023,
+          0.02,
+          0.8469945355191257
+        ],
+        [
+          0.714232,
+          0.02,
+          0.8442622950819673
+        ],
+        [
+          0.715873,
+          0.02,
+          0.8442622950819673
+        ],
+        [
+          0.737528,
+          0.01,
+          0.8442622950819673
+        ],
+        [
+          0.75,
+          0.01,
+          0.8415300546448088
+        ],
+        [
+          0.755438,
+          0.01,
+          0.7404371584699454
+        ],
+        [
+          0.766136,
+          0.01,
+          0.7377049180327869
+        ],
+        [
+          0.771467,
+          0.01,
+          0.7349726775956285
+        ],
+        [
+          0.7728,
+          0.01,
+          0.73224043715847
+        ],
+        [
+          0.79543,
+          0.01,
+          0.73224043715847
+        ],
+        [
+          0.824716,
+          0.01,
+          0.73224043715847
+        ],
+        [
+          0.830975,
+          0.01,
+          0.7295081967213115
+        ],
+        [
+          0.849858,
+          0.01,
+          0.726775956284153
+        ],
+        [
+          0.85,
+          0.01,
+          0.726775956284153
+        ],
+        [
+          0.859931,
+          0.01,
+          0.6338797814207651
+        ],
+        [
+          0.864847,
+          0.01,
+          0.6338797814207651
+        ],
+        [
+          0.869808,
+          0.01,
+          0.6338797814207651
+        ],
+        [
+          0.870884,
+          0.01,
+          0.6311475409836066
+        ],
+        [
+          0.886379,
+          0.0,
+          0.6311475409836066
+        ],
+        [
+          0.889929,
+          0.0,
+          0.6311475409836066
+        ],
+        [
+          0.897949,
+          0.0,
+          0.6284153005464481
+        ],
+        [
+          0.903461,
+          0.0,
+          0.6256830601092896
+        ],
+        [
+          0.908878,
+          0.0,
+          0.6229508196721312
+        ],
+        [
+          0.917152,
+          0.0,
+          0.6229508196721312
+        ],
+        [
+          0.918812,
+          0.0,
+          0.6202185792349727
+        ],
+        [
+          0.919477,
+          0.0,
+          0.6174863387978142
+        ],
+        [
+          0.92,
+          0.0,
+          0.6174863387978142
+        ],
+        [
+          0.93,
+          0.0,
+          0.5546448087431693
+        ],
+        [
+          0.930115,
+          0.0,
+          0.4453551912568306
+        ],
+        [
+          0.932584,
+          0.0,
+          0.4453551912568306
+        ],
+        [
+          0.936693,
+          0.0,
+          0.4426229508196721
+        ],
+        [
+          0.940234,
+          0.0,
+          0.43989071038251365
+        ],
+        [
+          0.942531,
+          0.0,
+          0.4371584699453552
+        ],
+        [
+          0.943397,
+          0.0,
+          0.4344262295081967
+        ],
+        [
+          0.946744,
+          0.0,
+          0.43169398907103823
+        ],
+        [
+          0.94891,
+          0.0,
+          0.42896174863387976
+        ],
+        [
+          0.95,
+          0.0,
+          0.42896174863387976
+        ],
+        [
+          0.950745,
+          0.0,
+          0.33060109289617484
+        ],
+        [
+          0.963156,
+          0.0,
+          0.32786885245901637
+        ],
+        [
+          0.963181,
+          0.0,
+          0.3251366120218579
+        ],
+        [
+          0.966322,
+          0.0,
+          0.3224043715846995
+        ],
+        [
+          0.967255,
+          0.0,
+          0.319672131147541
+        ],
+        [
+          0.967384,
+          0.0,
+          0.31693989071038253
+        ],
+        [
+          0.97023,
+          0.0,
+          0.31420765027322406
+        ],
+        [
+          0.970784,
+          0.0,
+          0.3114754098360656
+        ],
+        [
+          0.97244,
+          0.0,
+          0.3087431693989071
+        ],
+        [
+          0.974439,
+          0.0,
+          0.30601092896174864
+        ],
+        [
+          0.976056,
+          0.0,
+          0.30327868852459017
+        ],
+        [
+          0.976427,
+          0.0,
+          0.3005464480874317
+        ],
+        [
+          0.98158,
+          0.0,
+          0.2978142076502732
+        ],
+        [
+          0.982951,
+          0.0,
+          0.29508196721311475
+        ],
+        [
+          0.983243,
+          0.0,
+          0.2923497267759563
+        ],
+        [
+          0.983911,
+          0.0,
+          0.2896174863387978
+        ],
+        [
+          0.984689,
+          0.0,
+          0.28688524590163933
+        ],
+        [
+          0.985649,
+          0.0,
+          0.28415300546448086
+        ],
+        [
+          0.985706,
+          0.0,
+          0.2814207650273224
+        ],
+        [
+          0.987187,
+          0.0,
+          0.2786885245901639
+        ],
+        [
+          0.988054,
+          0.0,
+          0.27595628415300544
+        ],
+        [
+          0.988366,
+          0.0,
+          0.273224043715847
+        ],
+        [
+          0.99,
+          0.0,
+          0.27049180327868855
+        ],
+        [
+          0.990032,
+          0.0,
+          0.1557377049180328
+        ],
+        [
+          0.990936,
+          0.0,
+          0.15300546448087432
+        ],
+        [
+          0.991204,
+          0.0,
+          0.15027322404371585
+        ],
+        [
+          0.991899,
+          0.0,
+          0.14754098360655737
+        ],
+        [
+          0.992634,
+          0.0,
+          0.1448087431693989
+        ],
+        [
+          0.992647,
+          0.0,
+          0.14207650273224043
+        ],
+        [
+          0.992653,
+          0.0,
+          0.13934426229508196
+        ],
+        [
+          0.993252,
+          0.0,
+          0.1366120218579235
+        ],
+        [
+          0.993612,
+          0.0,
+          0.13387978142076504
+        ],
+        [
+          0.993618,
+          0.0,
+          0.13114754098360656
+        ],
+        [
+          0.99377,
+          0.0,
+          0.1284153005464481
+        ],
+        [
+          0.993877,
+          0.0,
+          0.12568306010928962
+        ],
+        [
+          0.99419,
+          0.0,
+          0.12295081967213115
+        ],
+        [
+          0.99525,
+          0.0,
+          0.12021857923497267
+        ],
+        [
+          0.995563,
+          0.0,
+          0.11748633879781421
+        ],
+        [
+          0.995953,
+          0.0,
+          0.11475409836065574
+        ],
+        [
+          0.996561,
+          0.0,
+          0.11202185792349727
+        ],
+        [
+          0.997251,
+          0.0,
+          0.1092896174863388
+        ],
+        [
+          0.997531,
+          0.0,
+          0.10655737704918032
+        ],
+        [
+          0.99755,
+          0.0,
+          0.10382513661202186
+        ],
+        [
+          0.997825,
+          0.0,
+          0.10109289617486339
+        ],
+        [
+          0.998192,
+          0.0,
+          0.09836065573770492
+        ],
+        [
+          0.998216,
+          0.0,
+          0.09562841530054644
+        ],
+        [
+          0.998346,
+          0.0,
+          0.09289617486338798
+        ],
+        [
+          0.998554,
+          0.0,
+          0.09016393442622951
+        ],
+        [
+          0.998628,
+          0.0,
+          0.08743169398907104
+        ],
+        [
+          0.998636,
+          0.0,
+          0.08469945355191257
+        ],
+        [
+          0.998823,
+          0.0,
+          0.08196721311475409
+        ],
+        [
+          0.998883,
+          0.0,
+          0.07923497267759563
+        ],
+        [
+          0.998992,
+          0.0,
+          0.07650273224043716
+        ],
+        [
+          0.99924,
+          0.0,
+          0.07377049180327869
+        ],
+        [
+          0.999248,
+          0.0,
+          0.07103825136612021
+        ],
+        [
+          0.999366,
+          0.0,
+          0.06830601092896176
+        ],
+        [
+          0.999476,
+          0.0,
+          0.06557377049180328
+        ],
+        [
+          0.999477,
+          0.0,
+          0.06284153005464481
+        ],
+        [
+          0.999497,
+          0.0,
+          0.060109289617486336
+        ],
+        [
+          0.999514,
+          0.0,
+          0.05737704918032787
+        ],
+        [
+          0.999542,
+          0.0,
+          0.0546448087431694
+        ],
+        [
+          0.999592,
+          0.0,
+          0.05191256830601093
+        ],
+        [
+          0.999689,
+          0.0,
+          0.04918032786885246
+        ],
+        [
+          0.999714,
+          0.0,
+          0.04644808743169399
+        ],
+        [
+          0.999751,
+          0.0,
+          0.04371584699453552
+        ],
+        [
+          0.999761,
+          0.0,
+          0.040983606557377046
+        ],
+        [
+          0.99977,
+          0.0,
+          0.03825136612021858
+        ],
+        [
+          0.999772,
+          0.0,
+          0.03551912568306011
+        ],
+        [
+          0.999807,
+          0.0,
+          0.03278688524590164
+        ],
+        [
+          0.999882,
+          0.0,
+          0.030054644808743168
+        ],
+        [
+          0.9998830000000001,
+          0.0,
+          0.0
+        ]
+      ],
+      "calibration": {
+        "ece": 0.06681504749340368,
+        "n": 379,
+        "mean_score": 0.8779506253298154,
+        "positive_rate": 0.9287598944591029
+      }
+    }
+  ]
+}

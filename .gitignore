@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Generated artifacts — published to Hugging Face, not to Git
+artifacts/
+data/raw/
+data/dataset/
+
+# Large model formats
+*.onnx
+*.gguf
+*.safetensors
+
+# Local outputs
+map.json
+masked.txt
+restored.txt
+figures/_selftest_*
+
+# OS
+.DS_Store
+
+# Benchmark input copies (regenerable from the dataset)
+benchmarks/results/_docs*.json
