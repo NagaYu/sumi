@@ -688,6 +688,12 @@ rather than template memorisation.
 
 {ood_tbl}
 
+![Name and address recall on the template-independent set](fig1_name_detection_ood.png)
+
+![False-positive rate on confusable negatives](fig3_false_positives_ood.png)
+
+![Model size versus accuracy](fig2_size_vs_accuracy_ood.png)
+
 The "FP rate" column is the fraction of hard-negative documents (which contain **no**
 PII at all) where the system fired at least once.
 
