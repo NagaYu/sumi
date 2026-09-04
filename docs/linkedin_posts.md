@@ -39,6 +39,8 @@ Presidioには1行で差し込めます。既存の匿名化パイプライン�
 
 なお、これは法令遵守を保証するものではありません。リスクを下げる道具であり、検出漏れは必ず起こります。
 
+ブラウザ上で試せます（貼り付けたテキストは端末外に出ません）:
+Demo: https://huggingface.co/spaces/NagaYu/sumi
 Code: https://github.com/NagaYu/sumi
 Model: https://huggingface.co/NagaYu/sumi-ja-pii
 Dataset: https://huggingface.co/datasets/NagaYu/sumi-ja-pii-corpus
@@ -76,6 +78,8 @@ Everything — training and evaluation — is synthetic. No real personal data a
 
 It reduces risk. It is not a compliance guarantee, and misses will happen.
 
+Try it in your browser — nothing you paste is uploaded anywhere:
+Demo: https://huggingface.co/spaces/NagaYu/sumi
 Code: https://github.com/NagaYu/sumi
 Model: https://huggingface.co/NagaYu/sumi-ja-pii
 Dataset: https://huggingface.co/datasets/NagaYu/sumi-ja-pii-corpus
@@ -101,7 +105,8 @@ CPUで動く0.13Bの日本語PII検出器「墨（Sumi）」を公開しまし�
 
 Presidioに1行で差し込めます。学習データは全て合成、実在の個人情報は不使用。法令遵守を保証するものではありません。
 
-https://github.com/NagaYu/sumi
+ブラウザ内で動くデモ（テキストは端末外に出ません）:
+https://huggingface.co/spaces/NagaYu/sumi
 
 #自然言語処理 #機械学習 #個人情報保護 #NLP
 
@@ -120,7 +125,8 @@ On names alone the margin is small (0.81 vs 0.78). The win is addresses, ID/numb
 
 One line to drop into Presidio. All training data synthetic — no real personal information. Not a compliance guarantee.
 
-https://github.com/NagaYu/sumi
+Runs in your browser, nothing uploaded:
+https://huggingface.co/spaces/NagaYu/sumi
 
 #NLP #MachineLearning #Privacy #OpenSource
 
@@ -136,5 +142,7 @@ https://github.com/NagaYu/sumi
   the alternative if you prefer to lead with recall.
 - Put the links in the first comment instead of the post body if you want more
   reach; LinkedIn suppresses posts with outbound links.
+- The demo runs client-side, so "paste your own text, nothing is uploaded" is a
+  true statement and a strong reason for people to click. Worth saying explicitly.
 - The "where it doesn't win" line is deliberate. Naming the weak result is what
   makes the strong ones credible to a technical audience.
