@@ -565,9 +565,17 @@ class TokenClassifier:
         """
         from transformers import AutoModelForTokenClassification, AutoTokenizer
 
-        labels_path = os.path.join(path, LABELS_FILENAME)
         labels: list[str] | None = None
-        if os.path.exists(labels_path):
+        labels_path = os.path.join(path, LABELS_FILENAME)
+        if not os.path.exists(labels_path) and not os.path.isdir(path):
+            # Hugging Face Hub のリポジトリ ID が渡された場合はラベル台帳を取得する。
+            try:
+                from huggingface_hub import hf_hub_download
+
+                labels_path = hf_hub_download(path, LABELS_FILENAME)
+            except Exception:
+                labels_path = ""
+        if labels_path and os.path.exists(labels_path):
             with open(labels_path, "r", encoding="utf-8") as fh:
                 labels = list(json.load(fh)["label_list"])
 

@@ -20,7 +20,14 @@ from sumi.detector import DEFAULT_MODEL_DIR, SumiDetector
 from sumi.mask import ReversibleMasker
 from sumi.types import ALL_TYPES, PIIType, Span  # noqa: F401
 
-MODEL_DIR = os.environ.get("SUMI_MODEL_DIR", DEFAULT_MODEL_DIR)
+#: Where to load the model from. On a Hugging Face Space there is no local
+#: checkpoint, so fall back to the published repo rather than silently running
+#: with the rule layer alone.
+HUB_MODEL = "NagaYu/sumi-ja-pii"
+MODEL_DIR = os.environ.get(
+    "SUMI_MODEL_DIR",
+    DEFAULT_MODEL_DIR if os.path.isdir(DEFAULT_MODEL_DIR) else HUB_MODEL,
+)
 
 EXAMPLES = [
     """拝啓 平素より格別のご高配を賜り厚く御礼申し上げます。
@@ -70,14 +77,22 @@ def _detector() -> SumiDetector:
         return _DET
     except NameError:
         pass
+    from sumi.calibrate import SpanCalibrator
+
     calibrator = None
     cal = os.path.join(MODEL_DIR, "calibrator.json")
     if os.path.exists(cal):
-        from sumi.calibrate import SpanCalibrator
-
         calibrator = SpanCalibrator.load(cal)
-    _DET = SumiDetector(MODEL_DIR if os.path.isdir(MODEL_DIR) else None,
-                        calibrator=calibrator, device="cpu")
+    elif not os.path.isdir(MODEL_DIR):
+        try:
+            from huggingface_hub import hf_hub_download
+
+            calibrator = SpanCalibrator.load(
+                hf_hub_download(MODEL_DIR, "calibrator.json")
+            )
+        except Exception:
+            calibrator = None
+    _DET = SumiDetector(MODEL_DIR, calibrator=calibrator, device="cpu")
     return _DET
 
 
@@ -85,21 +100,12 @@ def _presidio_only(text: str) -> list[Span]:
     """Presidio + GiNZA 単体の検出結果 (比較対象)。
 
     Claim: 検出率 — 「現行の実務」構成との差を同じ画面で見せる。
-    藁人形にしないため、GiNZA を足した最良に近い構成を使う。
+    ベンチマークの条件 (B) と **同じ実装** (:mod:`sumi.compare`) を通すので、
+    デモが見せる比較と README の数字が食い違わない。
     """
-    try:
-        from benchmarks.baselines.presidio_ginza import PresidioGinzaBaseline
+    from sumi.compare import presidio_spans
 
-        global _PRES
-        try:
-            b = _PRES
-        except NameError:
-            b = _PRES = PresidioGinzaBaseline()
-        if not b.available():
-            return []
-        return b.detect(text)
-    except Exception:
-        return []
+    return presidio_spans(text)
 
 
 def _highlight(text: str, spans: list[Span], other: list[Span]) -> str:

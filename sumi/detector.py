@@ -99,15 +99,30 @@ class SumiDetector:
         self._ort = None
         self.model_path = model_path
         if use_model:
+            explicit = model_path is not None
             path = model_path or (DEFAULT_MODEL_DIR if os.path.isdir(DEFAULT_MODEL_DIR) else None)
-            if path and os.path.isdir(path):
+            if path is not None:
                 self.model_path = path
-                if onnx:
-                    self._load_onnx(path)
-                else:
-                    from sumi.model import TokenClassifier
+                try:
+                    if onnx:
+                        self._load_onnx(path)
+                    else:
+                        from sumi.model import TokenClassifier
 
-                    self.model = TokenClassifier.load(path, device=device)
+                        self.model = TokenClassifier.load(path, device=device)
+                except Exception as exc:
+                    # 明示的に指定されたモデルが読めないのは設定ミスであり、
+                    # 黙って規則層だけで動くと「検出できていない」ことに気づけない。
+                    # 既定パスの探索に失敗した場合だけ、規則層のみで続行する。
+                    if explicit:
+                        raise RuntimeError(
+                            f"could not load the Sumi model from {path!r}: "
+                            f"{type(exc).__name__}: {exc}\n"
+                            "Pass a local directory produced by scripts/train.py, or a "
+                            "Hugging Face repo id such as 'NagaYu/sumi-ja-pii'. "
+                            "Use SumiDetector(use_model=False) if you intend to run the "
+                            "rule layer alone."
+                        ) from exc
         self.use_model = self.model is not None or self._ort is not None
 
     # ------------------------------------------------------------------ onnx
@@ -119,16 +134,33 @@ class SumiDetector:
         import onnxruntime as ort
         from transformers import AutoTokenizer
 
-        cand = [os.path.join(path, n) for n in ("model.int8.onnx", "model.onnx")]
-        onnx_path = next((c for c in cand if os.path.exists(c)), None)
+        names = ("model.int8.onnx", "model.onnx")
+        onnx_path = next(
+            (c for c in (os.path.join(path, n) for n in names) if os.path.exists(c)), None
+        )
+        if onnx_path is None and not os.path.isdir(path):
+            # Hub リポジトリ ID として解決を試みる (INT8 を優先)。
+            from huggingface_hub import hf_hub_download
+
+            for n in names:
+                try:
+                    onnx_path = hf_hub_download(path, n)
+                    break
+                except Exception:
+                    continue
         if onnx_path is None:
-            raise FileNotFoundError(f"ONNX model not found under {path}")
+            raise FileNotFoundError(f"ONNX model not found under {path!r}")
         so = ort.SessionOptions()
         so.intra_op_num_threads = int(os.environ.get("SUMI_ORT_THREADS", "0")) or 0
         self._ort = ort.InferenceSession(onnx_path, so, providers=["CPUExecutionProvider"])
         self._ort_path = onnx_path
         self._tok = AutoTokenizer.from_pretrained(path)
-        with open(os.path.join(path, "sumi_labels.json"), encoding="utf-8") as f:
+        labels_path = os.path.join(path, "sumi_labels.json")
+        if not os.path.exists(labels_path):
+            from huggingface_hub import hf_hub_download
+
+            labels_path = hf_hub_download(path, "sumi_labels.json")
+        with open(labels_path, encoding="utf-8") as f:
             self._labels = json.load(f)["label_list"]
 
     def _onnx_predict(self, texts: Sequence[str]) -> list[list[Span]]:
