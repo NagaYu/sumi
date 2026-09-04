@@ -1,0 +1,290 @@
+[
+ {
+  "id": 0,
+  "text": "拝啓 平素より格別のご高配を賜り厚く御礼申し上げます。\nこのたびは弊社サービスをご利用いただきありがとうございます。\nご登録内容の確認をお願いいたします。\n\n  お名前     森本一郎 様\n  生年月日   昭和47年3月4日\n  ご住所     〒160-0023 東京都新宿区西新宿2-8-1 グランドビル501\n  ご連絡先   090-1234-5678 / morimoto.ichiro@example.co.jp\n  会員番号   MB-2024-004512\n  引落口座   0001-234-5678901\n\nなお、型番 TX-2024-0355 の製品は生産終了となりました。\n契約日は2023年4月1日、次回のご請求は2024-01-15です。",
+  "presidio_ginza": [
+   {
+    "start": 105,
+    "end": 114,
+    "label": "DOB",
+    "text": "昭和47年3月4日",
+    "score": 0.85,
+    "entity_type": "Date"
+   },
+   {
+    "start": 125,
+    "end": 149,
+    "label": "ADDRESS",
+    "text": "〒160-0023 東京都新宿区西新宿2-8-1",
+    "score": 0.85,
+    "entity_type": "Address"
+   },
+   {
+    "start": 169,
+    "end": 182,
+    "label": "PHONE",
+    "text": "090-1234-5678",
+    "score": 0.4,
+    "entity_type": "PHONE_NUMBER"
+   },
+   {
+    "start": 185,
+    "end": 214,
+    "label": "EMAIL",
+    "text": "morimoto.ichiro@example.co.jp",
+    "score": 1.0,
+    "entity_type": "EMAIL_ADDRESS"
+   },
+   {
+    "start": 227,
+    "end": 238,
+    "label": "PHONE",
+    "text": "2024-004512",
+    "score": 0.4,
+    "entity_type": "PHONE_NUMBER"
+   },
+   {
+    "start": 305,
+    "end": 314,
+    "label": "DOB",
+    "text": "2023年4月1日",
+    "score": 0.85,
+    "entity_type": "Date"
+   },
+   {
+    "start": 322,
+    "end": 332,
+    "label": "PHONE",
+    "text": "2024-01-15",
+    "score": 0.85,
+    "entity_type": "Phone_Number"
+   }
+  ],
+  "sumi_python": [
+   {
+    "start": 89,
+    "end": 93,
+    "label": "NAME",
+    "text": "森本一郎",
+    "from": "model"
+   },
+   {
+    "start": 105,
+    "end": 114,
+    "label": "DOB",
+    "text": "昭和47年3月4日",
+    "from": "model"
+   },
+   {
+    "start": 126,
+    "end": 134,
+    "label": "POSTAL_CODE",
+    "text": "160-0023",
+    "from": "rule"
+   },
+   {
+    "start": 135,
+    "end": 159,
+    "label": "ADDRESS",
+    "text": "東京都新宿区西新宿2-8-1 グランドビル501",
+    "from": "model"
+   },
+   {
+    "start": 169,
+    "end": 182,
+    "label": "PHONE",
+    "text": "090-1234-5678",
+    "from": "rule"
+   },
+   {
+    "start": 185,
+    "end": 214,
+    "label": "EMAIL",
+    "text": "morimoto.ichiro@example.co.jp",
+    "from": "rule"
+   },
+   {
+    "start": 224,
+    "end": 238,
+    "label": "MEMBER_ID",
+    "text": "MB-2024-004512",
+    "from": "rule"
+   },
+   {
+    "start": 248,
+    "end": 264,
+    "label": "BANK_ACCOUNT",
+    "text": "0001-234-5678901",
+    "from": "rule"
+   }
+  ],
+  "reference_config": "python SumiDetector(onnx=True) — the same INT8 graph the browser runs"
+ },
+ {
+  "id": 1,
+  "text": "森の中を歩いていると、林業の振興について泉が湧くように話が広がった。\n長野県の気候は寒暖差が大きく、福島の復興も着実に進んでいる。\n本田技研工業が新製品を発表し、大和ハウス工業との提携も報じられた。\nお客様各位におかれましては、平素より格別のご高配を賜り厚く御礼申し上げます。\n会場は仙台市青葉区役所です。議案第12号について採決を行う。\n注文番号 0120-8834-221 でお問い合わせください。",
+  "presidio_ginza": [
+   {
+    "start": 35,
+    "end": 38,
+    "label": "ADDRESS",
+    "text": "長野県",
+    "score": 0.85,
+    "entity_type": "Address"
+   },
+   {
+    "start": 50,
+    "end": 52,
+    "label": "NAME",
+    "text": "福島",
+    "score": 0.85,
+    "entity_type": "Person"
+   },
+   {
+    "start": 175,
+    "end": 184,
+    "label": "PHONE",
+    "text": "0120-8834",
+    "score": 0.85,
+    "entity_type": "Phone_Number"
+   }
+  ],
+  "sumi_python": [],
+  "reference_config": "python SumiDetector(onnx=True) — the same INT8 graph the browser runs"
+ },
+ {
+  "id": 2,
+  "text": "【議事録】\n日時   2024年5月20日 14:00-15:30\n場所   本社会議室 101-2024\n出席者 青木健太、泉さん、大和田課長、株式会社森商事の林様\n\n■決定事項\n・申込者 山口花子(平成7年12月1日生)の口座 普通 1234567 を登録する。\n・連絡先は 03-1234-5678、予備で 050-9876-5432 とする。\n・マイナンバー 1234 5678 9012 の取扱いは別途規程による。",
+  "presidio_ginza": [
+   {
+    "start": 11,
+    "end": 21,
+    "label": "DOB",
+    "text": "2024年5月20日",
+    "score": 0.85,
+    "entity_type": "Date"
+   },
+   {
+    "start": 58,
+    "end": 62,
+    "label": "NAME",
+    "text": "青木健太",
+    "score": 0.85,
+    "entity_type": "Person"
+   },
+   {
+    "start": 63,
+    "end": 64,
+    "label": "NAME",
+    "text": "泉",
+    "score": 0.85,
+    "entity_type": "Person"
+   },
+   {
+    "start": 67,
+    "end": 71,
+    "label": "NAME",
+    "text": "大和田課",
+    "score": 0.85,
+    "entity_type": "Person"
+   },
+   {
+    "start": 96,
+    "end": 100,
+    "label": "NAME",
+    "text": "山口花子",
+    "score": 0.85,
+    "entity_type": "Person"
+   },
+   {
+    "start": 101,
+    "end": 110,
+    "label": "DOB",
+    "text": "平成7年12月1日",
+    "score": 0.85,
+    "entity_type": "Date"
+   },
+   {
+    "start": 140,
+    "end": 152,
+    "label": "PHONE",
+    "text": "03-1234-5678",
+    "score": 0.4,
+    "entity_type": "PHONE_NUMBER"
+   }
+  ],
+  "sumi_python": [
+   {
+    "start": 58,
+    "end": 62,
+    "label": "NAME",
+    "text": "青木健太",
+    "from": "model"
+   },
+   {
+    "start": 63,
+    "end": 64,
+    "label": "NAME",
+    "text": "泉",
+    "from": "model"
+   },
+   {
+    "start": 67,
+    "end": 70,
+    "label": "NAME",
+    "text": "大和田",
+    "from": "model"
+   },
+   {
+    "start": 81,
+    "end": 82,
+    "label": "NAME",
+    "text": "林",
+    "from": "model"
+   },
+   {
+    "start": 96,
+    "end": 100,
+    "label": "NAME",
+    "text": "山口花子",
+    "from": "model"
+   },
+   {
+    "start": 101,
+    "end": 103,
+    "label": "DOB",
+    "text": "平成",
+    "from": "model"
+   },
+   {
+    "start": 116,
+    "end": 126,
+    "label": "BANK_ACCOUNT",
+    "text": "普通 1234567",
+    "from": "rule"
+   },
+   {
+    "start": 140,
+    "end": 152,
+    "label": "PHONE",
+    "text": "03-1234-5678",
+    "from": "rule"
+   },
+   {
+    "start": 157,
+    "end": 170,
+    "label": "PHONE",
+    "text": "050-9876-5432",
+    "from": "rule"
+   },
+   {
+    "start": 184,
+    "end": 198,
+    "label": "MYNUMBER",
+    "text": "1234 5678 9012",
+    "from": "rule"
+   }
+  ],
+  "reference_config": "python SumiDetector(onnx=True) — the same INT8 graph the browser runs"
+ }
+]

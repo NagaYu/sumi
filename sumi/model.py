@@ -309,25 +309,39 @@ def decode_bio(
     cur_score = 1.0
 
     def _flush() -> None:
-        nonlocal cur_type
-        if cur_type is not None and cur_end > cur_start and cur_score >= threshold:
-            spans.append(
-                Span(
-                    start=cur_start,
-                    end=cur_end,
-                    label=PIIType(cur_type),
-                    text=text[cur_start:cur_end],
-                    score=float(cur_score),
-                    source=Source.MODEL,
-                    meta={"decoder": "bio_min"},
+        nonlocal cur_type, cur_start, cur_end, cur_score
+        if cur_type is not None and cur_end > cur_start:
+            # 端の空白を削ってから確定する。空白だけになった場合は捨てる。
+            st, en = cur_start, cur_end
+            while st < en and text[st].isspace():
+                st += 1
+            while en > st and text[en - 1].isspace():
+                en -= 1
+            if en > st:
+                spans.append(
+                    Span(
+                        start=st,
+                        end=en,
+                        label=PIIType(cur_type),
+                        text=text[st:en],
+                        score=float(cur_score),
+                        source=Source.MODEL,
+                        meta={"decoder": "bio_min"},
+                    )
                 )
-            )
         cur_type = None
 
     for t in range(n):
         a, b = int(offsets[t][0]), int(offsets[t][1])
         if b <= a:
             # 特殊トークン: スパンを切らずに読み飛ばす (先頭/末尾にしか出ない)
+            continue
+        if not text[a:b].strip():
+            # 空白・改行だけのトークン。ここでスパンを **開かない**。開くと、
+            # 量子化後のモデルが改行1文字を氏名と判定するような無意味な検出が出る。
+            # ただしスパンを閉じてもいけない: 住所は内部に空白を含みうるので
+            # (「東京都... グランドビル501」)、閉じると1つの住所が分割される。
+            # 読み飛ばすだけにして、末尾の空白は _flush() 側で削る。
             continue
         k = int(best_k[t])
         p = float(best_p[t])

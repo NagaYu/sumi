@@ -371,6 +371,7 @@ process so peak memory is attributed correctly.
 
 [![Model on HF](https://img.shields.io/badge/%F0%9F%A4%97%20Model-{badge(HF_MODEL)}-yellow)](https://huggingface.co/{HF_MODEL})
 [![Dataset on HF](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-{badge(HF_DATASET)}-yellow)](https://huggingface.co/datasets/{HF_DATASET})
+[![Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Demo-Try%20it%20in%20your%20browser-orange)](https://huggingface.co/spaces/NagaYu/sumi)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![CI](https://github.com/{GH_REPO}/actions/workflows/ci.yml/badge.svg)](https://github.com/{GH_REPO}/actions/workflows/ci.yml)
 
@@ -394,6 +395,15 @@ need a model, and a reversible masking path so you can still use an external LLM
 without shipping the original values.
 
 {speed_line}
+
+## Try it
+
+**[Live demo](https://huggingface.co/spaces/NagaYu/sumi)** — runs entirely in your
+browser via transformers.js. Nothing you paste is uploaded anywhere, which for a
+redaction tool seemed like the only honest way to build a demo. The browser port
+reads its rules from the same generated bundle the library uses, and
+[`parity.html`](https://nagayu-sumi.static.hf.space/parity.html) checks it span-for-span
+against Python reference output.
 
 ## Install
 

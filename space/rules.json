@@ -1,0 +1,353 @@
+{
+ "schema": "sumi-rules-v1",
+ "specs": [
+  {
+   "rule_id": "email.basic",
+   "label": "EMAIL",
+   "pattern": "(?<![A-Za-z0-9._%+\\-])[A-Za-z0-9._%+\\-]{1,64}@[A-Za-z0-9](?:[A-Za-z0-9\\-]{0,61}[A-Za-z0-9])?(?:\\.[A-Za-z0-9](?:[A-Za-z0-9\\-]{0,61}[A-Za-z0-9])?)+",
+   "confidence": 0.99,
+   "require_context": false,
+   "context": [],
+   "negative_context": [],
+   "priority": 90,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "phone.jp",
+   "label": "PHONE",
+   "pattern": "(?<![0-9A-Za-z\\-])(?:\\+81[\\-\\s]?)?0\\d{1,4}[\\-\\(\\)\\s]?\\d{1,4}[\\-\\)\\s]?\\d{3,4}(?![0-9A-Za-z\\-])",
+   "confidence": 0.8,
+   "require_context": false,
+   "context": [
+    "TEL",
+    "Tel",
+    "tel",
+    "電話",
+    "でんわ",
+    "連絡先",
+    "携帯",
+    "FAX",
+    "Fax",
+    "お電話",
+    "番号",
+    "ご連絡",
+    "直通",
+    "代表"
+   ],
+   "negative_context": [
+    "型番",
+    "製品コード",
+    "注文番号",
+    "整理番号",
+    "追跡番号",
+    "ISBN",
+    "図面番号",
+    "会議室",
+    "在庫コード",
+    "試験区分",
+    "バージョン",
+    "郵便物番号",
+    "測定値",
+    "商品コード",
+    "管理番号",
+    "伝票"
+   ],
+   "priority": 80,
+   "validator": "jp_phone",
+   "reject_date_shape": true
+  },
+  {
+   "rule_id": "postal.jp",
+   "label": "POSTAL_CODE",
+   "pattern": "(?<![0-9A-Za-z\\-])\\d{3}-\\d{4}(?![0-9A-Za-z\\-])",
+   "confidence": 0.55,
+   "require_context": true,
+   "context": [
+    "〒",
+    "郵便番号",
+    "住所",
+    "所在地",
+    "送付先",
+    "ご住所"
+   ],
+   "negative_context": [],
+   "priority": 70,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "bank.code_branch_account",
+   "label": "BANK_ACCOUNT",
+   "pattern": "(?<![0-9A-Za-z\\-])\\d{4}-\\d{3}-\\d{7}(?![0-9A-Za-z\\-])",
+   "confidence": 0.95,
+   "require_context": false,
+   "context": [
+    "口座",
+    "振込",
+    "支店",
+    "普通",
+    "当座",
+    "引落",
+    "銀行"
+   ],
+   "negative_context": [],
+   "priority": 85,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "bank.prose",
+   "label": "BANK_ACCOUNT",
+   "pattern": "(?:普通|当座|貯蓄)\\s*(?:預金)?\\s*(?<![0-9A-Za-z\\-])\\d{7}(?![0-9A-Za-z\\-])",
+   "confidence": 0.92,
+   "require_context": false,
+   "context": [],
+   "negative_context": [],
+   "priority": 84,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "card.16digit",
+   "label": "CREDIT_CARD",
+   "pattern": "(?<![0-9A-Za-z\\-])(?:\\d{4}[\\-\\s]\\d{4}[\\-\\s]\\d{4}[\\-\\s]\\d{4}|\\d{16})(?![0-9A-Za-z\\-])",
+   "confidence": 0.93,
+   "require_context": false,
+   "context": [],
+   "negative_context": [],
+   "priority": 88,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "card.amex",
+   "label": "CREDIT_CARD",
+   "pattern": "(?<![0-9A-Za-z\\-])3[47]\\d{2}[\\-\\s]\\d{6}[\\-\\s]\\d{5}(?![0-9A-Za-z\\-])",
+   "confidence": 0.93,
+   "require_context": false,
+   "context": [],
+   "negative_context": [],
+   "priority": 88,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "mynumber.12digit",
+   "label": "MYNUMBER",
+   "pattern": "(?<![0-9A-Za-z\\-])(?:\\d{4}[\\-\\s]\\d{4}[\\-\\s]\\d{4}|\\d{12})(?![0-9A-Za-z\\-])",
+   "confidence": 0.7,
+   "require_context": true,
+   "context": [
+    "マイナンバー",
+    "個人番号",
+    "通知カード",
+    "本人確認",
+    "マイナ"
+   ],
+   "negative_context": [
+    "追跡番号",
+    "郵便物番号",
+    "注文番号",
+    "型番",
+    "整理番号",
+    "伝票",
+    "管理番号",
+    "在庫",
+    "図面番号",
+    "試験区分",
+    "製品コード",
+    "商品コード",
+    "会議室",
+    "ISBN"
+   ],
+   "priority": 86,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "member.prefixed",
+   "label": "MEMBER_ID",
+   "pattern": "(?<![A-Za-z0-9])[A-Z]{2,6}[\\-]?\\d{4,12}(?:[\\-]\\d{2,6})?(?![A-Za-z0-9])",
+   "confidence": 0.6,
+   "require_context": true,
+   "context": [
+    "会員番号",
+    "顧客番号",
+    "契約番号",
+    "受付番号",
+    "お客様番号",
+    "整理番号",
+    "会員ID",
+    "顧客ID",
+    "社員番号",
+    "登録番号",
+    "カード番号"
+   ],
+   "negative_context": [],
+   "priority": 60,
+   "validator": null,
+   "reject_date_shape": false
+  },
+  {
+   "rule_id": "member.numeric_ctx",
+   "label": "MEMBER_ID",
+   "pattern": "(?<![0-9A-Za-z\\-])\\d{6,12}(?:-\\d{2,6})?(?![0-9A-Za-z\\-])",
+   "confidence": 0.55,
+   "require_context": true,
+   "context": [
+    "会員番号",
+    "顧客番号",
+    "契約番号",
+    "お客様番号",
+    "社員番号",
+    "会員ID"
+   ],
+   "negative_context": [],
+   "priority": 55,
+   "validator": null,
+   "reject_date_shape": false
+  }
+ ],
+ "phone_plan": {
+  "area2": [
+   "03",
+   "06"
+  ],
+  "area3": [
+   "011",
+   "015",
+   "017",
+   "018",
+   "019",
+   "022",
+   "023",
+   "024",
+   "025",
+   "026",
+   "027",
+   "028",
+   "029",
+   "042",
+   "043",
+   "044",
+   "045",
+   "046",
+   "047",
+   "048",
+   "049",
+   "052",
+   "053",
+   "054",
+   "055",
+   "058",
+   "059",
+   "072",
+   "073",
+   "075",
+   "076",
+   "077",
+   "078",
+   "079",
+   "082",
+   "083",
+   "084",
+   "086",
+   "087",
+   "088",
+   "089",
+   "092",
+   "093",
+   "095",
+   "096",
+   "097",
+   "098",
+   "099"
+  ],
+  "mobile": [
+   "070",
+   "080",
+   "090"
+  ],
+  "ip": [
+   "050"
+  ],
+  "tollfree4": [
+   "0120",
+   "0570",
+   "0800"
+  ]
+ },
+ "types": {
+  "NAME": {
+   "ja": "氏名",
+   "en": "Name",
+   "rule_deterministic": false,
+   "model_driven": true
+  },
+  "ADDRESS": {
+   "ja": "住所",
+   "en": "Address",
+   "rule_deterministic": false,
+   "model_driven": true
+  },
+  "PHONE": {
+   "ja": "電話番号",
+   "en": "Phone",
+   "rule_deterministic": true,
+   "model_driven": false
+  },
+  "EMAIL": {
+   "ja": "メールアドレス",
+   "en": "Email",
+   "rule_deterministic": true,
+   "model_driven": false
+  },
+  "DOB": {
+   "ja": "生年月日",
+   "en": "Birth date",
+   "rule_deterministic": false,
+   "model_driven": true
+  },
+  "BANK_ACCOUNT": {
+   "ja": "金融口座",
+   "en": "Bank account",
+   "rule_deterministic": true,
+   "model_driven": false
+  },
+  "CREDIT_CARD": {
+   "ja": "カード番号",
+   "en": "Card number",
+   "rule_deterministic": true,
+   "model_driven": false
+  },
+  "MYNUMBER": {
+   "ja": "マイナンバー様式",
+   "en": "My Number",
+   "rule_deterministic": true,
+   "model_driven": false
+  },
+  "MEMBER_ID": {
+   "ja": "会員番号",
+   "en": "Member ID",
+   "rule_deterministic": true,
+   "model_driven": false
+  },
+  "POSTAL_CODE": {
+   "ja": "郵便番号",
+   "en": "Postal code",
+   "rule_deterministic": true,
+   "model_driven": false
+  }
+ },
+ "rule_deterministic": [
+  "MYNUMBER",
+  "CREDIT_CARD",
+  "PHONE",
+  "EMAIL",
+  "BANK_ACCOUNT",
+  "MEMBER_ID",
+  "POSTAL_CODE"
+ ],
+ "context_window": 12
+}

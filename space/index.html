@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sumi — Japanese PII detection, in your browser</title>
+<style>
+  :root {
+    --bg: #fbfbf9; --fg: #1d2429; --muted: #6b7785; --line: #e2e5e9;
+    --card: #ffffff; --accent: #2f6f4e;
+    --both: #cfe8d5; --sumi: #a8d5b5; --pres: #f3c9b6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14181b; --fg: #e6e9ec; --muted: #97a3ae; --line: #2a3136;
+      --card: #1b2024; --accent: #57a773;
+      --both: #2f5541; --sumi: #3d7a56; --pres: #7d4a34;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font: 15px/1.65 -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Noto Sans JP",
+          "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 28px 20px 64px; }
+  h1 { font-size: 26px; margin: 0 0 6px; letter-spacing: -0.01em; }
+  h1 .ja { font-weight: 700; }
+  .lede { color: var(--muted); margin: 0 0 18px; max-width: 68ch; }
+  .warn {
+    border-left: 3px solid #c9743f; background: color-mix(in srgb, #c9743f 8%, transparent);
+    padding: 10px 14px; border-radius: 0 6px 6px 0; margin: 0 0 20px; font-size: 13.5px;
+  }
+  .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 10px; padding: 16px;
+  }
+  .card h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .07em;
+             color: var(--muted); margin: 0 0 10px; font-weight: 600; }
+  textarea {
+    width: 100%; min-height: 230px; resize: vertical; padding: 12px;
+    border: 1px solid var(--line); border-radius: 8px; background: var(--bg);
+    color: var(--fg); font: 14px/1.7 inherit;
+  }
+  .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+  button {
+    background: var(--accent); color: #fff; border: 0; border-radius: 7px;
+    padding: 9px 18px; font-size: 14px; font-weight: 600; cursor: pointer;
+  }
+  button:disabled { opacity: .45; cursor: default; }
+  button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); font-weight: 500; }
+  label.sl { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 7px; }
+  input[type=range] { width: 118px; }
+  .legend { font-size: 12.5px; margin-bottom: 10px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .legend span { padding: 2px 8px; border-radius: 4px; }
+  .doc { line-height: 2.15; font-size: 14.5px; white-space: pre-wrap; word-break: break-word; }
+  .doc mark { border-radius: 3px; padding: 1px 3px; color: inherit;
+              border-bottom: 2px solid rgba(0,0,0,.16); }
+  .doc mark sub { font-size: 9px; opacity: .7; margin-left: 2px; }
+  pre.masked {
+    white-space: pre-wrap; word-break: break-word; font: 13px/1.8 ui-monospace, SFMono-Regular, Menlo, monospace;
+    background: var(--bg); border: 1px solid var(--line); border-radius: 8px;
+    padding: 12px; margin: 0; max-height: 300px; overflow: auto;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--line); }
+  th { color: var(--muted); font-weight: 600; font-size: 11.5px;
+       text-transform: uppercase; letter-spacing: .05em; }
+  td.num { font-variant-numeric: tabular-nums; color: var(--muted); }
+  .pill { font-size: 11px; padding: 1px 7px; border-radius: 20px;
+          border: 1px solid var(--line); color: var(--muted); }
+  .status { font-size: 13px; color: var(--muted); min-height: 20px; }
+  .bar { height: 3px; background: var(--line); border-radius: 3px; overflow: hidden; margin-top: 8px; }
+  .bar > i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+  .summary { font-size: 13.5px; }
+  .summary b { color: var(--fg); }
+  .summary .only-sumi { color: var(--accent); font-weight: 600; }
+  .summary .only-pres { color: #c9743f; font-weight: 600; }
+  footer { margin-top: 30px; color: var(--muted); font-size: 12.5px; border-top: 1px solid var(--line); padding-top: 16px; }
+  a { color: var(--accent); }
+  code { background: var(--bg); border: 1px solid var(--line); border-radius: 4px; padding: 1px 5px; font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span class="ja">墨</span> Sumi — Japanese PII detection</h1>
+  <p class="lede">
+    A 0.13B token classifier plus a rule layer, running <b>entirely in your browser</b>.
+    Nothing you paste is uploaded anywhere — the model is downloaded to your machine
+    and inference happens locally. For a redaction tool, that seemed like the right
+    way to build the demo.
+  </p>
+
+  <div class="warn">
+    <b>This does not guarantee legal or regulatory compliance.</b> It reduces the risk
+    of personal data leaving your machine; it is not a complete detector, and misses
+    will happen. All training and evaluation data is synthetic — no real personal
+    information was used in this project.
+  </div>
+
+  <div class="cols">
+    <div class="card">
+      <h2>Input (Japanese)</h2>
+      <textarea id="inp" spellcheck="false"></textarea>
+      <div class="row">
+        <button id="run" disabled>Analyse</button>
+        <label class="sl">Threshold
+          <input type="range" id="thr" min="0.05" max="0.95" step="0.05" value="0.5">
+          <span id="thrv" class="num">0.50</span>
+        </label>
+        <label class="sl"><input type="checkbox" id="rules" checked> Rule layer</label>
+        <label class="sl"><input type="checkbox" id="model" checked> Model layer</label>
+      </div>
+      <div class="row" id="examples"></div>
+      <div class="status" id="status">Loading the model (about 133 MB, cached after the first visit)…</div>
+      <div class="bar"><i id="prog"></i></div>
+    </div>
+
+    <div class="card">
+      <h2>Detected — compared with Presidio + GiNZA</h2>
+      <div class="legend">
+        <span style="background:var(--both)">both agree</span>
+        <span style="background:var(--sumi)">Sumi only</span>
+        <span style="background:var(--pres)">Presidio + GiNZA only</span>
+      </div>
+      <div class="doc" id="doc"><span style="color:var(--muted)">Results will appear here.</span></div>
+      <p class="summary" id="summary" style="margin-top:14px"></p>
+    </div>
+  </div>
+
+  <div class="cols" style="margin-top:20px">
+    <div class="card">
+      <h2>Redacted output — this is what you would send to an LLM</h2>
+      <pre class="masked" id="masked"></pre>
+      <div class="row">
+        <button class="ghost" id="copy">Copy</button>
+        <button class="ghost" id="restore">Restore original</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Mapping table — original values are never shown</h2>
+      <table id="map"><thead><tr>
+        <th>Placeholder</th><th>Type</th><th>Masked</th><th>Len</th><th>Offsets</th>
+      </tr></thead><tbody></tbody></table>
+      <p style="font-size:12.5px;color:var(--muted);margin:10px 0 0">
+        In the library this table is written to a local <code>map.json</code> with mode
+        <code>0600</code> and never transmitted. If an original value would ever reach
+        the wire, the send raises rather than logs.
+      </p>
+    </div>
+  </div>
+
+  <footer>
+    <p style="margin:0 0 8px">
+      <b>The Presidio + GiNZA comparison is pre-computed</b> for the three built-in
+      examples — spaCy cannot run in a browser. Type your own text and you will see
+      Sumi's output alone. The comparison numbers come from the same code path as the
+      published benchmark (<code>sumi.compare</code>).
+    </p>
+    <p style="margin:0">
+      On a template-independent evaluation set, Sumi fires on <b>0%</b> of documents
+      containing no PII, against <b>83%</b> for Presidio + GiNZA, while reaching 1.00
+      recall on addresses versus 0.08. ·
+      <a href="https://github.com/NagaYu/sumi">Code</a> ·
+      <a href="https://huggingface.co/NagaYu/sumi-ja-pii">Model</a> ·
+      <a href="https://huggingface.co/datasets/NagaYu/sumi-ja-pii-corpus">Dataset</a>
+    </p>
+  </footer>
+</div>
+
+<script type="module">
+import { SumiDetector, mask, unmask } from './sumi.js';
+
+const $ = id => document.getElementById(id);
+const esc = s => s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+let detector = null, examples = [], lastMask = null, originalText = '';
+
+const COLORS = { both: 'var(--both)', sumi: 'var(--sumi)', presidio: 'var(--pres)' };
+
+function typeName(label) {
+  return (detector?.types?.[label]?.en) || label;
+}
+
+function render(text, spans, presidio) {
+  const overlaps = (a, b) => a.start < b.end && b.start < a.end;
+  const marks = [];
+  for (const s of spans) {
+    marks.push({ ...s, kind: presidio.some(o => overlaps(s, o)) ? 'both' : 'sumi' });
+  }
+  for (const o of presidio) {
+    if (!spans.some(s => overlaps(s, o))) marks.push({ ...o, kind: 'presidio' });
+  }
+  marks.sort((a, b) => a.start - b.start || a.end - b.end);
+
+  let html = '', pos = 0;
+  for (const m of marks) {
+    if (m.start < pos) continue;
+    html += esc(text.slice(pos, m.start));
+    const tip = `${typeName(m.label)} · score ${(m.score ?? 0).toFixed(2)} · ${m.kind}`;
+    html += `<mark style="background:${COLORS[m.kind]}" title="${esc(tip)}">` +
+            esc(text.slice(m.start, m.end)) +
+            `<sub>${esc(typeName(m.label))}</sub></mark>`;
+    pos = m.end;
+  }
+  html += esc(text.slice(pos));
+  $('doc').innerHTML = html;
+
+  const onlySumi = spans.filter(s => !presidio.some(o => overlaps(s, o)));
+  const onlyPres = presidio.filter(o => !spans.some(s => overlaps(s, o)));
+  const fmt = xs => xs.slice(0, 6).map(x => `${typeName(x.label)} “${esc(x.text)}”`).join(', ') || 'none';
+  $('summary').innerHTML =
+    `<b>${spans.length}</b> span(s) detected.<br>` +
+    `Found by <span class="only-sumi">Sumi only</span>: <b>${onlySumi.length}</b> — ${fmt(onlySumi)}<br>` +
+    (presidio.length || onlyPres.length
+      ? `Found by <span class="only-pres">Presidio + GiNZA only</span>: <b>${onlyPres.length}</b> — ${fmt(onlyPres)}`
+      : `<span style="color:var(--muted)">No pre-computed Presidio comparison for custom text.</span>`);
+}
+
+function renderMask(text, spans) {
+  const { masked, entries } = mask(text, spans);
+  lastMask = entries;
+  originalText = text;
+  $('masked').textContent = masked;
+  const tb = $('map').querySelector('tbody');
+  tb.innerHTML = entries.map(e => {
+    const preview = e.original[0] + '●'.repeat(Math.max(0, [...e.original].length - 1));
+    return `<tr><td><code>${esc(e.placeholder)}</code></td><td>${esc(typeName(e.label))}</td>` +
+           `<td>${esc(preview)}</td><td class="num">${[...e.original].length}</td>` +
+           `<td class="num">${e.start}–${e.end}</td></tr>`;
+  }).join('') || '<tr><td colspan="5" style="color:var(--muted)">Nothing detected.</td></tr>';
+}
+
+async function analyse() {
+  if (!detector) return;
+  const raw = $('inp').value;
+  $('run').disabled = true;
+  $('status').textContent = 'Analysing…';
+  try {
+    detector.threshold = parseFloat($('thr').value);
+    const useRules = $('rules').checked, useModel = $('model').checked;
+
+    const res = await detector.detect(raw);
+    let spans = res.spans;
+    if (!useRules) spans = spans.filter(s => s.meta.from !== 'rule');
+    if (!useModel) spans = spans.filter(s => s.meta.from !== 'model');
+
+    const ex = examples.find(e => e.text === raw);
+    const presidio = ex ? ex.presidio_ginza : [];
+    render(res.text, spans, presidio);
+    renderMask(res.text, spans);
+    const t = res.timings;
+    $('status').textContent =
+      `rules ${t.rules.toFixed(1)} ms · model ${t.model.toFixed(0)} ms · ` +
+      `merge ${t.merge.toFixed(1)} ms — ${t.total.toFixed(0)} ms total, in your browser`;
+  } catch (err) {
+    $('status').textContent = 'Error: ' + err.message;
+    console.error(err);
+  } finally {
+    $('run').disabled = false;
+  }
+}
+
+$('thr').addEventListener('input', () => { $('thrv').textContent = (+$('thr').value).toFixed(2); });
+$('run').addEventListener('click', analyse);
+$('copy').addEventListener('click', () => navigator.clipboard?.writeText($('masked').textContent));
+$('restore').addEventListener('click', () => {
+  if (!lastMask) return;
+  const restored = unmask($('masked').textContent, lastMask);
+  $('masked').textContent = restored;
+  $('status').textContent = restored === originalText
+    ? 'Restored — byte-for-byte identical to the original.'
+    : 'Restored (text was edited, so it differs from the original).';
+});
+
+(async () => {
+  examples = await fetch('examples.json').then(r => r.json());
+  $('inp').value = examples[0].text;
+  $('examples').innerHTML = examples.map((e, i) =>
+    `<button class="ghost" data-ex="${i}">Example ${i + 1}${i === 1 ? ' — no PII at all' : ''}</button>`
+  ).join('');
+  $('examples').addEventListener('click', ev => {
+    const i = ev.target.dataset?.ex;
+    if (i !== undefined) { $('inp').value = examples[+i].text; analyse(); }
+  });
+
+  try {
+    detector = await SumiDetector.load(p => {
+      if (p.status === 'progress' && p.total) {
+        $('prog').style.width = (100 * p.loaded / p.total).toFixed(1) + '%';
+        $('status').textContent =
+          `Downloading ${p.file} — ${(p.loaded / 1e6).toFixed(0)} / ${(p.total / 1e6).toFixed(0)} MB`;
+      }
+    });
+    $('prog').style.width = '100%';
+    $('status').textContent = 'Model ready. Nothing leaves your browser.';
+    $('run').disabled = false;
+    analyse();
+  } catch (err) {
+    $('status').textContent = 'Failed to load the model: ' + err.message;
+    console.error(err);
+  }
+})();
+</script>
+</body>
+</html>
