@@ -122,11 +122,32 @@ def main() -> None:
         print("\nPass --yes to publish. Nothing is uploaded by default.")
         return
 
-    from datasets import Dataset, DatasetDict
+    from datasets import Dataset, DatasetDict, Features, Sequence, Value
     from huggingface_hub import HfApi
 
-    dd = DatasetDict({name: Dataset.from_list(to_rows(docs))
-                      for name, docs in sets.items()})
+    # An explicit schema is required. Without it, Arrow infers the element type of
+    # `negative_kinds` per split, and the `ood` split — where every list is empty —
+    # comes out as list<null> instead of list<string>, so push_to_hub rejects the
+    # DatasetDict for having mismatched features.
+    features = Features({
+        "doc_id": Value("string"),
+        "text": Value("string"),
+        "spans": Value("string"),            # JSON-encoded list of span objects
+        "subset": Value("string"),
+        "genre": Value("string"),
+        "source_license": Value("string"),
+        "source_ref": Value("string"),
+        "negative_kinds": Sequence(Value("string")),
+        "meta": Value("string"),             # JSON-encoded object
+    })
+
+    dd = DatasetDict({
+        name: Dataset.from_list(to_rows(docs), features=features)
+        for name, docs in sets.items()
+    })
+    schemas = {n: str(d.features) for n, d in dd.items()}
+    assert len(set(schemas.values())) == 1, f"split schemas differ: {schemas}"
+    print(f"  schema pinned across {len(dd)} splits")
     dd.push_to_hub(args.repo, private=args.private)
 
     card = (open(args.card, encoding="utf-8").read()

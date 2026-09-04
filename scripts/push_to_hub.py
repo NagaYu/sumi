@@ -83,7 +83,11 @@ def collect(model_dir: str) -> list[str]:
         if bad:
             print(f"  withheld ({why}): {name}")
             continue
-        if name in INCLUDE or name.endswith((".safetensors", ".json", ".txt", ".model", ".onnx")):
+        # .png is included because the model card embeds the headline figures;
+        # without it the card renders with broken images.
+        if name in INCLUDE or name.endswith(
+            (".safetensors", ".json", ".txt", ".model", ".onnx", ".png", ".md")
+        ):
             out.append(path)
     return out
 
