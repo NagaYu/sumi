@@ -33,6 +33,11 @@ from sumi.types import ALL_TYPES, Document
 
 OUT_DIR = "data/dataset"
 
+#: How many freshly generated card- and My-Number-shaped values the test suite
+#: checks per type (tests/test_synth.py imports this, and the dataset card quotes
+#: it, so the published number cannot drift from what the tests actually do).
+CHECKDIGIT_TEST_SAMPLES = 400
+
 
 def write_jsonl(docs: list[Document], path: str) -> None:
     """Document 列を JSONL へ書き出す。
@@ -264,6 +269,10 @@ def dataset_card(sets: dict[str, list[Document]], repo_id: str = "") -> str:
         f"| {t.value} | {t.ja} | {type_counts.get(t.value,0)} |" for t in ALL_TYPES
     )
     kind_rows = "\n".join(f"| {k} | {v} |" for k, v in sorted(kind_counts.items()))
+    n_checkdigit = sum(
+        1 for docs in sets.values() for d in docs for s in d.spans
+        if s.label.value in ("CREDIT_CARD", "MYNUMBER")
+    )
     split_rows = "\n".join(
         f"| {k} | {len(v)} | {sum(len(d.spans) for d in v)} |" for k, v in sets.items()
     )
@@ -284,6 +293,8 @@ size_categories:
 - 10K<n<100K
 ---
 
+> ## STATUS: maintained
+
 # Sumi — synthetic Japanese PII corpus
 
 **This dataset contains no real personal information.** Every name, address, phone
@@ -291,6 +302,14 @@ number, email address, date of birth, bank account, member ID and My-Number-shap
 digit string is generated with a seeded RNG and inserted into the text **while
 recording the offsets**, so the gold spans are correct by construction rather than
 recovered by searching afterwards.
+
+**No usable card number or My Number exists anywhere in this corpus, by
+construction.** Card-shaped values deliberately fail the Luhn check and
+My-Number-shaped values deliberately fail the official check-digit algorithm — the
+format is right, the value is not. The test suite checks
+{CHECKDIGIT_TEST_SAMPLES} freshly generated values of each type, and the publish
+script re-checks all {n_checkdigit:,} card- and My-Number-shaped spans in this corpus
+before every upload; nothing is uploaded if a single one validates.
 
 Built for [Sumi](https://github.com/NagaYu/sumi), a Japanese PII detector.
 
@@ -310,9 +329,7 @@ addresses. This corpus makes those confusions the point rather than an accident.
   **randomised** block/lot numbers; email addresses only ever use reserved domains
   (`example.com`, `example.co.jp`, `example.ne.jp`, `.test`, `.invalid`, …).
 - **Identifiers with check digits are format-valid and value-invalid by
-  construction.** Card-shaped numbers deliberately fail Luhn and My-Number-shaped
-  numbers deliberately fail the official check-digit algorithm, so no usable number
-  can be produced. The project's test suite asserts this over thousands of samples.
+  construction** — see the paragraph at the top for how this is verified.
 - This dataset **does not certify compliance** with any law or regulation. It is
   material for training and evaluating detectors, and makes no completeness claim.
 
@@ -356,6 +373,37 @@ entire `negatives` split.
 - `address_like_facility` — civic buildings and stations that read like addresses
 - `number_like_id` — bill numbers, statute numbers, quantities that look like account numbers
 - `date_like_nondob` — contract, issue and meeting dates that are not birth dates
+
+## The hard-negative closed loop
+
+`HardNegativeGenerator` (in `sumi.negatives`) is the part of this corpus most worth
+reusing, and it is not a fixed list — it is designed to run as a loop.
+
+1. **Generate.** Each hard negative is drawn from one of the eight kinds above
+   according to per-kind sampling weights. Every surface form it emits is indexed
+   back to the kind that produced it.
+2. **Count.** After a detector is trained, everything it flags on the `negatives`
+   split is by definition a false positive. `classify_false_positive` attributes each
+   one to a kind — first from the generator's own surface index, then from context
+   patterns, so it also works on text the generator did not produce.
+3. **Reweight.** `reweight_from_errors(fp_counts, strength)` tilts the sampling
+   distribution toward the kinds the detector still gets wrong:
+
+   ```
+   share_k = fp_k / (sum(fp) + eps)
+   w_k     = w_k * (1 + strength * share_k)
+   w       = w / sum(w)
+   w_k     = clip(w_k, 0.25/K, 4/K), then renormalise        # K = 8 kinds
+   ```
+
+   The floor means no kind ever starves; the ceiling means no single kind takes over.
+4. **Regenerate.** `scripts/build_dataset.py --weights negatives_weights.json`
+   builds the next batch from the updated distribution.
+
+This release is the first round: its hard negatives were generated with uniform
+weights. The weights the first-round model produced for the next round are
+published with the model as
+[`negatives_weights.json`](https://huggingface.co/NagaYu/sumi-ja-pii/blob/main/negatives_weights.json).
 
 ## Base text licences
 

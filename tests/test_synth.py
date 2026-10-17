@@ -123,8 +123,10 @@ def test_credit_cards_are_format_valid_but_value_invalid():
     Claim: 低誤検出 — 「形式は正しく値は無効」という契約の実装確認。
     有効なカード番号を1件でも生成してはならない。
     """
+    from scripts.build_dataset import CHECKDIGIT_TEST_SAMPLES
+
     f = PIIFactory(seed=11)
-    for _ in range(400):
+    for _ in range(CHECKDIGIT_TEST_SAMPLES):
         v = f.credit_card()
         digits = re.sub(r"\D", "", v.text)
         assert len(digits) in (14, 15, 16), f"桁数が不正: {v.text}"
@@ -137,8 +139,10 @@ def test_mynumbers_are_format_valid_but_value_invalid():
 
     Claim: 低誤検出 — 実在しうる有効な個人番号を生成しないための保証。
     """
+    from scripts.build_dataset import CHECKDIGIT_TEST_SAMPLES
+
     f = PIIFactory(seed=13)
-    for _ in range(400):
+    for _ in range(CHECKDIGIT_TEST_SAMPLES):
         v = f.mynumber()
         digits = re.sub(r"\D", "", v.text)
         assert len(digits) == 12, f"桁数が不正: {v.text}"

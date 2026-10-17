@@ -6,6 +6,17 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![CI](https://github.com/NagaYu/sumi/actions/workflows/ci.yml/badge.svg)](https://github.com/NagaYu/sumi/actions/workflows/ci.yml)
 
+> ## STATUS: feature-complete — real-document validation is out of scope by design
+>
+> **All training and evaluation data is synthetic. No real document, no real
+> person's data, nothing derived from either, at any stage. This is not a gap to be
+> closed later: validating a PII detector on real personal data would contradict
+> the premise of the tool. The numbers below are an upper bound measured under
+> synthetic conditions, and they are final.**
+>
+> You must validate on your own documents before deploying. We cannot do that
+> for you, and that is deliberate — not an omission.
+
 **English-first PII detectors stumble on Japanese names and addresses. Sumi closes
 that gap with a 0.13B token classifier that runs on CPU, and drops into Presidio in
 one line.**
@@ -98,9 +109,12 @@ result["response"]   # the LLM's answer, with the original values restored
 ```
 
 `LLMRoundTrip` routes every outbound payload through an `EgressGuard` built from the
-mapping table. If any original value — raw, NFKC-normalised, or digits-only — would
-be transmitted, the send is **blocked** rather than logged. The test suite asserts
-this over every synthetic document it generates.
+mapping table. If an original value of three or more characters — raw,
+NFKC-normalised, or digits-only — would be transmitted, the send is **blocked**
+rather than logged. One- and two-character values (many Japanese surnames) are
+exempt, because they collide with ordinary words; they are still masked, but the
+guard is not a second line of defence for them. The test suite checks this on every
+document in its synthetic masking fixture.
 
 ## How it works
 
@@ -156,7 +170,9 @@ flowchart TB
 3. **Hard negatives are a closed loop.** After training, false positives on the
    negative subset are counted *per confusion type*, and those counts skew the
    generation distribution for the next batch
-   (`HardNegativeGenerator.reweight_from_errors`).
+   (`HardNegativeGenerator.reweight_from_errors`). The released checkpoint is the
+   first round; the weights it produced for the next one ship with the model as
+   `negatives_weights.json`.
 
 ## Compared against
 
@@ -321,7 +337,7 @@ process so peak memory is attributed correctly.
 - Labels: 21 BIO classes (10 types × B/I, plus O)
 - A span's probability is the **minimum** over its constituent token probabilities —
   the weakest link, not the average
-- ONNX INT8: **133 MB** (from 530 MB fp32), argmax agreement 1.0000
+- ONNX INT8: **133 MB** (from 530 MB fp32). Argmax agreement with fp32: 1.0000 on the export sanity sentence, 0.9964 over 88,106 evaluation tokens
 
 ### Distribution formats
 
@@ -351,8 +367,14 @@ Everything is synthetic. See the [dataset card](https://huggingface.co/datasets/
 ## Limitations
 
 - **On personal names alone, Sumi's lead is small.** On the template-independent set Sumi reaches 0.81 against 0.78 for Presidio + GiNZA. Sumi's advantage is not name recall in isolation — it is addresses, the ID/number families, and above all the false-positive rate.
-- **Trained and evaluated entirely on synthetic data.** Behaviour on your real
-  documents will differ. Validate on your own data before deploying.
+- **Trained and evaluated entirely on synthetic data — a fixed upper bound, by
+  design.** Using only synthetic data was an ethical decision: a PII detector that
+  had to be trained or proven on real personal data would contradict its own
+  purpose. The same decision sets a ceiling on what can be claimed. Every number in
+  this document was measured under synthetic conditions and is an upper bound;
+  behaviour on real documents cannot be validated here without breaking that
+  premise, and will differ. Validating on your own documents is your step, and it
+  is deliberately left to you.
 - **Misses are certain.** Lowering the threshold raises recall and also raises false
   positives; the trade-off table above is the honest picture of that.
 - **Sumi is not a compliance control.** It reduces risk; it does not certify anything.

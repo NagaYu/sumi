@@ -199,6 +199,22 @@ flowchart TB
 ```"""
 
 
+#: Owner-supplied wording, verbatim except the second sentence, which the owner
+#: approved replacing so that it describes Sumi's actual data (documents and
+#: personal data, not calls or clinical recordings). Declares the project
+#: feature-complete and states that real-document validation is out of scope by design.
+STATUS = """> ## STATUS: feature-complete — real-document validation is out of scope by design
+>
+> **All training and evaluation data is synthetic. No real document, no real
+> person's data, nothing derived from either, at any stage. This is not a gap to be
+> closed later: validating a PII detector on real personal data would contradict
+> the premise of the tool. The numbers below are an upper bound measured under
+> synthetic conditions, and they are final.**
+>
+> You must validate on your own documents before deploying. We cannot do that
+> for you, and that is deliberate — not an omission."""
+
+
 DISCLAIMER = """> [!WARNING]
 > **Sumi does not guarantee legal or regulatory compliance.** It is a tool for
 > *reducing the risk* of personal data leaving your machine — not a complete
@@ -259,8 +275,14 @@ def limitations(bench: dict | None, ood: dict | None) -> str:
                 f"the false-positive rate.\n")
     return f"""## Limitations
 
-{name_gap}- **Trained and evaluated entirely on synthetic data.** Behaviour on your real
-  documents will differ. Validate on your own data before deploying.
+{name_gap}- **Trained and evaluated entirely on synthetic data — a fixed upper bound, by
+  design.** Using only synthetic data was an ethical decision: a PII detector that
+  had to be trained or proven on real personal data would contradict its own
+  purpose. The same decision sets a ceiling on what can be claimed. Every number in
+  this document was measured under synthetic conditions and is an upper bound;
+  behaviour on real documents cannot be validated here without breaking that
+  premise, and will differ. Validating on your own documents is your step, and it
+  is deliberately left to you.
 - **Misses are certain.** Lowering the threshold raises recall and also raises false
   positives; the trade-off table above is the honest picture of that.
 - **Sumi is not a compliance control.** It reduces risk; it does not certify anything.
@@ -275,7 +297,66 @@ def limitations(bench: dict | None, ood: dict | None) -> str:
   all published documentation is in English."""
 
 
-def build_readme(bench, ood, train, exp, out: str) -> str:
+def load_bearing(exp: dict | None, agreement: dict | None, closed_loop: dict | None) -> str:
+    """The parts of Sumi that are finished and that other work can rely on.
+
+    Claim: 可逆性 / CPU速度 / 低誤検出 — each item states its scope exactly as
+    measured, so "complete" never means "broader than what was checked".
+    """
+    onnx = ((exp or {}).get("formats", {}) or {}).get("onnx", {})
+    if onnx.get("int8_mb"):
+        onnx_line = (
+            f"- **ONNX INT8, {onnx['int8_mb']:.0f} MB** (from {onnx['fp32_mb']:.0f} MB fp32). "
+            f"Argmax agreement with fp32 is {onnx.get('int8_argmax_agreement', 0):.4f} on the "
+            f"export sanity-check sentence")
+        if agreement:
+            onnx_line += (
+                f", and {agreement['token_agreement']:.4f} over "
+                f"{agreement['tokens']:,} tokens of {agreement['documents']} evaluation "
+                f"documents ({agreement['pii_token_agreement']:.4f} on tokens either model "
+                f"labels as PII; {agreement['documents_identical']}/{agreement['documents']} "
+                f"documents labelled identically). Quantisation is not lossless — the "
+                f"span-level effect is the difference between conditions (D) and (E) in the "
+                f"evaluation below.")
+        else:
+            onnx_line += "."
+    else:
+        onnx_line = "- **ONNX INT8** — the CPU inference path."
+
+    loop_tail = ""
+    if closed_loop:
+        top = sorted(closed_loop.items(), key=lambda kv: -kv[1])[:2]
+        loop_tail = (
+            " The released checkpoint is the first round, trained on uniformly weighted "
+            "negatives; the weights it produced for the next round ("
+            + ", ".join(f"`{k}` {v:.3f}" for k, v in top)
+            + ", …) are published as `negatives_weights.json`.")
+
+    return f"""## What is complete and load-bearing
+
+- **EgressGuard.** `LLMRoundTrip` routes every outbound payload through an
+  `EgressGuard` built from the mapping table. If an original value would be
+  transmitted — raw, NFKC-normalised, or digits-only — the send is **blocked, not
+  logged**. The guard covers values of three or more characters; one- and
+  two-character values (many Japanese surnames among them) are exempt by design,
+  because they collide with ordinary words — masking still replaces them, but the
+  guard is not a second line of defence for them. The test suite checks this on
+  every synthetic document in its masking fixture, not a sample.
+- **Three-line Presidio integration** — `register(registry)`. Neither spaCy nor
+  GiNZA is required; Sumi analyses Japanese itself.
+{onnx_line}
+- **Checksums never gate detection.** Card- and number-shaped strings are detected
+  by format; whether the check digit validates is recorded in
+  `meta["checksum_valid"]` and nothing more.
+- **The mapping file is written with mode 0600 and never leaves the machine.**
+- **Hard negatives run as a closed loop.** After training, false positives on the
+  negative subset are counted per confusion type, and those counts tilt the
+  generation distribution of the next batch
+  (`HardNegativeGenerator.reweight_from_errors`).{loop_tail}
+"""
+
+
+def build_readme(bench, ood, train, exp, out: str, agreement=None, closed_loop=None) -> str:
     """Write the GitHub README.
 
     Claim: 検出率 / 低誤検出 / CPU速度 / 可逆性 — the project's public face.
@@ -375,6 +456,8 @@ process so peak memory is attributed correctly.
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![CI](https://github.com/{GH_REPO}/actions/workflows/ci.yml/badge.svg)](https://github.com/{GH_REPO}/actions/workflows/ci.yml)
 
+{STATUS}
+
 **English-first PII detectors stumble on Japanese names and addresses. Sumi closes
 that gap with a 0.13B token classifier that runs on CPU, and drops into Presidio in
 one line.**
@@ -462,9 +545,12 @@ result["response"]   # the LLM's answer, with the original values restored
 ```
 
 `LLMRoundTrip` routes every outbound payload through an `EgressGuard` built from the
-mapping table. If any original value — raw, NFKC-normalised, or digits-only — would
-be transmitted, the send is **blocked** rather than logged. The test suite asserts
-this over every synthetic document it generates.
+mapping table. If an original value of three or more characters — raw,
+NFKC-normalised, or digits-only — would be transmitted, the send is **blocked**
+rather than logged. One- and two-character values (many Japanese surnames) are
+exempt, because they collide with ordinary words; they are still masked, but the
+guard is not a second line of defence for them. The test suite checks this on every
+document in its synthetic masking fixture.
 
 ## How it works
 
@@ -483,7 +569,9 @@ this over every synthetic document it generates.
 3. **Hard negatives are a closed loop.** After training, false positives on the
    negative subset are counted *per confusion type*, and those counts skew the
    generation distribution for the next batch
-   (`HardNegativeGenerator.reweight_from_errors`).
+   (`HardNegativeGenerator.reweight_from_errors`). The released checkpoint is the
+   first round; the weights it produced for the next one ship with the model as
+   `negatives_weights.json`.
 
 ## Compared against
 
@@ -508,7 +596,7 @@ this over every synthetic document it generates.
 - Labels: 21 BIO classes (10 types × B/I, plus O)
 - A span's probability is the **minimum** over its constituent token probabilities —
   the weakest link, not the average
-{f"- ONNX INT8: **{onnx['int8_mb']:.0f} MB** (from {onnx['fp32_mb']:.0f} MB fp32), argmax agreement {onnx.get('int8_argmax_agreement', 0):.4f}" if onnx.get("int8_mb") else ""}
+{f"- ONNX INT8: **{onnx['int8_mb']:.0f} MB** (from {onnx['fp32_mb']:.0f} MB fp32). Argmax agreement with fp32: {onnx.get('int8_argmax_agreement', 0):.4f} on the export sanity sentence" + (f", {agreement['token_agreement']:.4f} over {agreement['tokens']:,} evaluation tokens" if agreement else "") if onnx.get("int8_mb") else ""}
 
 ### Distribution formats
 
@@ -576,7 +664,7 @@ prose inherit CC BY-SA 4.0.
     return doc
 
 
-def build_model_card(bench, ood, train, exp, out: str) -> str:
+def build_model_card(bench, ood, train, exp, out: str, agreement=None, closed_loop=None) -> str:
     """Write the Hugging Face model card.
 
     Claim: 検出率 / CPU速度 — what a user of the weights needs to know.
@@ -601,6 +689,7 @@ tags:
 - named-entity-recognition
 - presidio
 - onnx
+- feature-complete
 base_model: sbintuitions/modernbert-ja-130m
 datasets:
 - {HF_DATASET}
@@ -608,6 +697,8 @@ widget:
 - text: "田中太郎様よりご連絡をいただきました。連絡先は090-1234-5678、tanaka.taro@example.co.jp です。"
 - text: "森の中を歩いていると、林業の振興について泉が湧くように話が広がった。長野県の気候は寒暖差が大きい。"
 ---
+
+{STATUS}
 
 # 墨 Sumi — Japanese PII detection (0.13B, CPU)
 
@@ -680,6 +771,7 @@ tok = AutoTokenizer.from_pretrained("{HF_MODEL}")
 model = AutoModelForTokenClassification.from_pretrained("{HF_MODEL}")
 ```
 
+{load_bearing(exp, agreement, closed_loop)}
 ## Evaluation
 
 Measured against four alternatives on identical documents, same CPU, same thread
@@ -717,7 +809,8 @@ PII at all) where the system fired at least once.
 |---|---|
 | `model.safetensors` | fp32 PyTorch weights |
 | `model.onnx` | ONNX fp32 |
-| `model.int8.onnx` | ONNX dynamic INT8 — {f"{onnx['int8_mb']:.0f} MB, argmax agreement {onnx.get('int8_argmax_agreement',0):.4f}" if onnx.get("int8_mb") else "the CPU path"} |
+| `model.int8.onnx` | ONNX dynamic INT8 — {f"{onnx['int8_mb']:.0f} MB" + (f", token-level argmax agreement with fp32 {agreement['token_agreement']:.4f} on evaluation text" if agreement else "") if onnx.get("int8_mb") else "the CPU path"} |
+| `onnx/model_quantized.onnx` | the same INT8 graph, in the layout transformers.js expects (used by the in-browser demo) |
 | `calibrator.json` | temperature scaling fitted on held-out spans |
 | `sumi_labels.json` | label order — keeps ONNX and PyTorch in sync |
 | `negatives_weights.json` | closed-loop weights: which confusion types the model still gets wrong |
@@ -767,14 +860,21 @@ def main() -> None:
     ap.add_argument("--export", default="artifacts/export/export_report.json")
     ap.add_argument("--readme", default="README.md")
     ap.add_argument("--model-card", default="artifacts/cards/MODEL_CARD.md")
+    ap.add_argument("--agreement", default="benchmarks/results/int8_agreement.json")
+    ap.add_argument("--closed-loop", default="artifacts/sumi-model/negatives_weights.json")
     args = ap.parse_args()
 
     bench, ood = _load(args.bench), _load(args.ood)
     train, exp = _load(args.train, {}), _load(args.export, {})
+    agreement = _load(args.agreement)
+    closed_loop = _load(args.closed_loop)
+    if agreement is None:
+        print(f"  ({args.agreement} missing — INT8 agreement will be stated on the "
+              f"sanity sentence only; run scripts/measure_int8_agreement.py)")
 
-    r = build_readme(bench, ood, train, exp, args.readme)
+    r = build_readme(bench, ood, train, exp, args.readme, agreement, closed_loop)
     print(f"README      -> {args.readme} ({len(r)} chars)")
-    m = build_model_card(bench, ood, train, exp, args.model_card)
+    m = build_model_card(bench, ood, train, exp, args.model_card, agreement, closed_loop)
     print(f"model card  -> {args.model_card} ({len(m)} chars)")
     if not bench:
         print("  (benchmark.json missing — evaluation sections are placeholders)")

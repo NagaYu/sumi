@@ -123,26 +123,47 @@ def test_mapping_never_appears_in_egress_payloads(docs):
 
     Claim: 可逆性 — 主張(1)。送信された全バイトを走査して確認する。
     これが本プロジェクトの安全性の中核。
+    フィクスチャの **全** 文書で検査する (公開カードがそう主張しているため、
+    先頭の一部だけを見る抜き取り検査にしてはならない)。
     """
-    for d in docs[:20]:
+    for d in docs:
         rec = RecordingTransport(responder=lambda p: p)
         rt = LLMRoundTrip(rec)
         r = rt.run(d.text, d.spans, instruction="次を要約してください。")
-        originals = r["map"].originals()
         assert rec.sent, "送信が記録されていない (テストが無意味になる)"
+        entries = r["map"].entries
+
+        # EgressGuard と同じ契約で検査する。MIN_LEN 以上の元値は、ペイロードの
+        # どこにも現れてはならない。
+        long_values = {e.original for e in entries if len(e.original) >= EgressGuard.MIN_LEN}
         for payload in rec.sent:
-            for o in originals:
+            for o in long_values:
                 assert o not in payload, (
                     f"{d.doc_id}: 元値 {o!r} が送信ペイロードに含まれている"
                 )
+
+        # MIN_LEN 未満 (1-2文字の姓など) は単純な部分一致では検査できない。
+        # 「優先度 中」の中のように、同じ文字が無関係な語として本文に残りうるため
+        # (実際にこれで誤って失敗した)。代わりに「マスクした出現が確かに消えた」
+        # ことを数で確認する: マスク後に残る出現数は、元の出現数から少なくとも
+        # その値のマスク件数だけ減っていなければならない。
+        masked = r["masked"]
+        for o in {e.original for e in entries} - long_values:
+            n_masked = sum(1 for e in entries if e.original == o)
+            assert masked.count(o) <= d.text.count(o) - n_masked, (
+                f"{d.doc_id}: 短い元値 {o!r} のマスク済み出現が残っている"
+            )
+        for e in entries:
+            assert e.placeholder in masked, f"{d.doc_id}: {e.placeholder} が無い"
 
 
 def test_mapping_not_in_any_serialized_form(docs):
     """対応表の元値が、送信ペイロードのどの表現形でも現れないこと。
 
     Claim: 可逆性 — 生・NFKC正規化形・数字のみ形の3形態で検査する。
+    フィクスチャの全文書が対象。
     """
-    for d in docs[:15]:
+    for d in docs:
         rec = RecordingTransport()
         rt = LLMRoundTrip(rec)
         r = rt.run(d.text, d.spans)

@@ -88,9 +88,9 @@
   <h1><span class="ja">墨</span> Sumi — Japanese PII detection</h1>
   <p class="lede">
     A 0.13B token classifier plus a rule layer, running <b>entirely in your browser</b>.
-    Nothing you paste is uploaded anywhere — the model is downloaded to your machine
-    and inference happens locally. For a redaction tool, that seemed like the right
-    way to build the demo.
+    <b>Nothing you paste is sent anywhere</b> — the model is downloaded to your machine
+    once and every step of detection and masking happens locally, on this page. For a
+    redaction tool, that is the only honest way to build a demo.
   </p>
 
   <div class="warn">
@@ -98,6 +98,8 @@
     of personal data leaving your machine; it is not a complete detector, and misses
     will happen. All training and evaluation data is synthetic — no real personal
     information was used in this project.
+    <b>The model is trained entirely on synthetic data. Validate on your own documents
+    before relying on it.</b>
   </div>
 
   <div class="cols">

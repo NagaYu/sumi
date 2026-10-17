@@ -1,0 +1,15 @@
+{
+  "documents": 450,
+  "composition": {
+    "ood": 100,
+    "negatives": 100,
+    "test": 250
+  },
+  "max_length": 256,
+  "token_agreement": 0.9964247610832406,
+  "tokens": 88106,
+  "pii_token_agreement": 0.982078853046595,
+  "pii_tokens": 17577,
+  "documents_identical": 273,
+  "note": "argmax over 21 BIO labels, fp32 PyTorch vs INT8 ONNX, special tokens excluded"
+}

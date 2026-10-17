@@ -23,10 +23,14 @@ tags:
 # 墨 Sumi — Japanese PII detection, in your browser
 
 Paste Japanese text and see what a 0.13B token classifier plus a rule layer finds.
-The model is downloaded to your machine and runs locally with
-[transformers.js](https://github.com/huggingface/transformers.js) — **nothing you
-paste is uploaded anywhere.** For a redaction tool that seemed like the only honest
-way to build a demo.
+
+**Everything runs in your browser. Nothing you paste is sent anywhere.** The model
+is downloaded to your machine once and runs locally with
+[transformers.js](https://github.com/huggingface/transformers.js); detection and
+masking happen on the page itself. For a redaction tool, that is the only honest way
+to build a demo.
+
+The model is trained entirely on synthetic data. Validate on your own documents before relying on it.
 
 The second built-in example contains **no personal data at all** — only look-alikes:
 surnames that are also ordinary nouns (森 forest, 林 woods, 泉 spring), prefecture
