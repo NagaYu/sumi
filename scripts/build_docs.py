@@ -17,6 +17,7 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from scripts.build_dataset import CHECKDIGIT_TEST_SAMPLES
 from sumi.types import ALL_TYPES, PIIType
 
 GH_REPO = "NagaYu/sumi"
@@ -71,7 +72,7 @@ def detection_table(bench: dict, *, with_fp: bool = False) -> str:
     """
     head = "| Condition | " + " | ".join(EN[t.value] for t in SHOW_TYPES) + " | micro F1 |"
     if with_fp:
-        head = head[:-1] + " FP rate |"
+        head += " FP rate |"
     sep = "|---|" + "---|" * (len(SHOW_TYPES) + (2 if with_fp else 1))
     rows = []
     for r in bench["results"]:
@@ -621,7 +622,10 @@ Everything is synthetic. See the [dataset card](https://huggingface.co/datasets/
   emails only ever use reserved domains (`example.*`, `.test`, `.invalid`).
 - **Identifiers with check digits are format-valid and value-invalid by
   construction** — Luhn and the My Number check digit are deliberately violated, so
-  no usable number can be produced. Tests assert this over thousands of samples.
+  no usable number can be produced. The test suite asserts this on
+  {CHECKDIGIT_TEST_SAMPLES} freshly generated values of each type, and the dataset
+  publish script re-checks every card- and My-Number-shaped span in the corpus
+  before upload.
 
 {limitations(bench, ood)}
 

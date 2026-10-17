@@ -196,7 +196,7 @@ into Wikipedia / statute / literary prose, 100 positive and
 is actually valid ("The date of birth is {value}."), but no business-document
 template is used.
 
-| Condition | Name | Address | Phone | Birth date | Email | Bank acct | My Number | Member ID | micro F1  FP rate |
+| Condition | Name | Address | Phone | Birth date | Email | Bank acct | My Number | Member ID | micro F1 | FP rate |
 |---|---|---|---|---|---|---|---|---|---|---|
 | (A) Presidio, default | 0.054 | 0.000 | 0.917 | 0.053 | 0.192 | 0.000 | 0.000 | 0.000 | 0.176 | 0.370 |
 | (B) Presidio + GiNZA | 0.784 | 0.077 | 0.833 | 0.789 | 0.231 | 0.000 | 0.000 | 0.024 | 0.245 | 0.830 |
@@ -362,7 +362,10 @@ Everything is synthetic. See the [dataset card](https://huggingface.co/datasets/
   emails only ever use reserved domains (`example.*`, `.test`, `.invalid`).
 - **Identifiers with check digits are format-valid and value-invalid by
   construction** — Luhn and the My Number check digit are deliberately violated, so
-  no usable number can be produced. Tests assert this over thousands of samples.
+  no usable number can be produced. The test suite asserts this on
+  400 freshly generated values of each type, and the dataset
+  publish script re-checks every card- and My-Number-shaped span in the corpus
+  before upload.
 
 ## Limitations
 
